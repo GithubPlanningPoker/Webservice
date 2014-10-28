@@ -22,89 +22,57 @@ namespace Webservice.Models
         private static string gamesPath = HttpContext.Current.Server.MapPath("~/App_Data/games.txt");
         private static string descriptionsPath = HttpContext.Current.Server.MapPath("~/App_Data/descriptions.txt");
         private static string votesPath = HttpContext.Current.Server.MapPath("~/App_Data/votes.txt");
-        private static string filePath = HttpContext.Current.Server.MapPath("~/App_Data/");
+        private static string path = HttpContext.Current.Server.MapPath("~/App_Data/");
 
-        private static string empty = "empty";
+        private static string defaultVote = "NotVotedYet";
 
         public static void CreateGame(string gameId, string hostId)
         {
-            StreamWriter swGames = new StreamWriter(filePath + gameId + ".txt");
+            StreamWriter swGames = new StreamWriter(path + gameId + ".txt");
             swGames.WriteLine(hostId);
+            swGames.WriteLine();
+            swGames.WriteLine();
             swGames.Close();
         }
 
         public static void AddUser(string gameId, string userId)
         {
-            string fileName = getFile(gameId);
-            string path = filePath + fileName;
-            if (fileName == "")
-                throw new ArgumentException("Game: " + gameId + " does not exist.");
-            string[] lines = File.ReadAllLines(path);
-            lines[2] += userId;
+            string filePath = getFile(gameId);            
+            string[] lines = File.ReadAllLines(filePath);
+            lines[2] += userId + "," + defaultVote;
             save(path, lines);
         }        
 
         public static void UpdateDescription(string gameId, string description)
         {
-            StreamReader srDescriptions = new StreamReader(descriptionsPath);
-            List<string> lines = new List<string>();
-            string line;
-            bool gameExists = false;
-            while ((line = srDescriptions.ReadLine()) != null)
-            {
-                if (line.Split(' ')[0] == gameId)
-                {
-                    line = gameId + " " + description;
-                    gameExists = true;
-                }
-                lines.Add(line);
-            }
-            if (!gameExists)
-                lines.Add(gameId + " " + description);
-            //Save(lines);
+            string filePath = getFile(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            lines[1] = description;
+            save(filePath, lines);
         }
 
         public static void ClearDescription(string gameId)
         {
-            StreamReader srGames = new StreamReader(gamesPath);
-            List<string> lines = new List<string>();
-            string line;
-            while ((line = srGames.ReadLine()) != null)
-            {
-                if (line.Split(' ')[0] == gameId)
-                    line = gameId;
-                lines.Add(line);
-            }
-            //save(lines)
+            UpdateDescription(gameId, "");
         }
 
         public static string GetDescription(string gameId)
         {
-            StreamReader srGames = new StreamReader(gamesPath);
-            string line, res = "";
-            while ((line = srGames.ReadLine()) != null)
-            {
-                if (line.Split(' ')[0] == gameId)
-                    res = line;
-            }
-            return res;
+            string filePath = getFile(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            return lines[1];
         }
 
         public static Dictionary<string, string> GetCurrentVotes(string gameId)
         {
             Dictionary<string, string> votes = new Dictionary<string, string>();
-            StreamReader srGames = new StreamReader(gamesPath);
-            string line;
-            while ((line = srGames.ReadLine()) != null)
+            string filePath = getFile(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            foreach (string entry in lines[2].Split(' '))
             {
-                if (line.Split(' ')[0] == gameId)
-                {
-                    string[] x = line.Split(' ');
-                    for (int i = 1; i < x.Count(); i+=2)
-                    {
-                        votes[x[i]] = x[i + 1];
-                    }
-                }
+                string user = entry.Split(',')[0];
+                string vote = entry.Split(',')[1];
+                votes.Add(user, vote);
             }
             return votes;
         }
@@ -122,11 +90,13 @@ namespace Webservice.Models
         private static string getFile(string gameId)
         {
             string file = "";
-            foreach (var fileName in Directory.GetFiles(filePath, "*.txt").Select(Path.GetFileName))
+            foreach (var fileName in Directory.GetFiles(path, "*.txt").Select(Path.GetFileName))
             {
                 if (gameId == fileName)
                     file = fileName;
             }
+            if (file == "")
+                throw new ArgumentException("Game: " + gameId + " does not exist.");
             return file;
         }
     }
