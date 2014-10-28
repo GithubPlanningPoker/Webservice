@@ -10,6 +10,7 @@ namespace Webservice.Models
     public static class Database
     {
         private static string gamesPath = HttpContext.Current.Server.MapPath("~/App_Data/games.txt");
+        private static string descriptionsPath = HttpContext.Current.Server.MapPath("~/App_Data/descriptions.txt");
 
         public static void CreateGame(string gameId, string hostId)
         {
@@ -21,7 +22,6 @@ namespace Webservice.Models
         public static void AddUser(string gameId, string userId)
         {            
             StreamReader srGames = new StreamReader(gamesPath);
-            string[] games = File.ReadAllLines(gamesPath);
             List<string> lines = new List<string>();
             string line;
             while ((line = srGames.ReadLine()) != null)
@@ -31,6 +31,52 @@ namespace Webservice.Models
                 lines.Add(line);
             }
             Save(lines);
+        }
+
+        public static void UpdateDescription(string gameId, string description)
+        {
+            StreamReader srDescriptions = new StreamReader(descriptionsPath);
+            List<string> lines = new List<string>();
+            string line;
+            bool gameExists = false;
+            while ((line = srDescriptions.ReadLine()) != null)
+            {
+                if (srDescriptions.ReadLine().Split(' ')[0] == gameId)
+                {
+                    line = gameId + " " + description;
+                    gameExists = true;
+                }
+                lines.Add(line);
+            }
+            if (!gameExists)
+                lines.Add(gameId + " " + description);
+            Save(lines);
+        }
+
+        public static void ClearDescription(string gameId)
+        {
+            StreamReader srGames = new StreamReader(gamesPath);
+            List<string> lines = new List<string>();
+            string line;
+            while ((line = srGames.ReadLine()) != null)
+            {
+                if (srGames.ReadLine().Split(' ')[0] == gameId)
+                    line = gameId;
+                lines.Add(line);
+            }
+            Save(lines);
+        }
+
+        public static string GetDescription(string gameId)
+        {
+            StreamReader srGames = new StreamReader(gamesPath);
+            string line, res = "";
+            while ((line = srGames.ReadLine()) != null)
+            {
+                if (srGames.ReadLine().Split(' ')[0] == gameId)
+                    res = line;
+            }
+            return res;
         }
 
         private static void Save(List<string> lines)
