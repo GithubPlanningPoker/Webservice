@@ -11,6 +11,7 @@ namespace Webservice.Models
     {
         private static string gamesPath = HttpContext.Current.Server.MapPath("~/App_Data/games.txt");
         private static string descriptionsPath = HttpContext.Current.Server.MapPath("~/App_Data/descriptions.txt");
+        private static string votesPath = HttpContext.Current.Server.MapPath("~/App_Data/votes.txt");
 
         public static void CreateGame(string gameId, string hostId)
         {
@@ -26,7 +27,7 @@ namespace Webservice.Models
             string line;
             while ((line = srGames.ReadLine()) != null)
             {
-                if (srGames.ReadLine().Split(' ')[0] == gameId)
+                if (line.Split(' ')[0] == gameId)
                     line += " " + userId;
                 lines.Add(line);
             }
@@ -41,7 +42,7 @@ namespace Webservice.Models
             bool gameExists = false;
             while ((line = srDescriptions.ReadLine()) != null)
             {
-                if (srDescriptions.ReadLine().Split(' ')[0] == gameId)
+                if (line.Split(' ')[0] == gameId)
                 {
                     line = gameId + " " + description;
                     gameExists = true;
@@ -60,7 +61,7 @@ namespace Webservice.Models
             string line;
             while ((line = srGames.ReadLine()) != null)
             {
-                if (srGames.ReadLine().Split(' ')[0] == gameId)
+                if (line.Split(' ')[0] == gameId)
                     line = gameId;
                 lines.Add(line);
             }
@@ -73,10 +74,29 @@ namespace Webservice.Models
             string line, res = "";
             while ((line = srGames.ReadLine()) != null)
             {
-                if (srGames.ReadLine().Split(' ')[0] == gameId)
+                if (line.Split(' ')[0] == gameId)
                     res = line;
             }
             return res;
+        }
+
+        public static Dictionary<string, string> GetCurrentVotes(string gameId)
+        {
+            Dictionary<string, string> votes = new Dictionary<string, string>();
+            StreamReader srGames = new StreamReader(gamesPath);
+            string line;
+            while ((line = srGames.ReadLine()) != null)
+            {
+                if (line.Split(' ')[0] == gameId)
+                {
+                    string[] x = line.Split(' ');
+                    for (int i = 1; i < x.Count(); i+=2)
+                    {
+                        votes[x[i]] = x[i + 1];
+                    }
+                }
+            }
+            return votes;
         }
 
         private static void Save(List<string> lines)
