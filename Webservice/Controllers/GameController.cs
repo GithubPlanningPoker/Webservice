@@ -12,16 +12,14 @@ namespace Webservice.Controllers
 {
     public class GameController : ApiController
     {
-        // POST api/<controller>
-        public Game Get([FromBody]String value)
+        // POST api/game
+        public dynamic Post([FromBody]String value)
         {
-            Game game = new Game
-            {
+            var returnVal = new { Success = true,
                 Id = getMD5(DateTime.Now.ToString()),
-                HostId = getMD5(value + DateTime.Now.ToString())
-            };
+                HostId = getMD5(value + DateTime.Now.ToString()) };
 
-            return game;
+            return returnVal;
         }
 
         private String getMD5(String input)
