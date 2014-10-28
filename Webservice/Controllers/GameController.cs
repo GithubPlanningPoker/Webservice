@@ -13,7 +13,9 @@ namespace Webservice.Controllers
     public class GameController : ApiController
     {
         // POST api/game
-        public dynamic Post([FromBody]String value)
+        [Route("api/game")]
+        [HttpPost]
+        public dynamic createGame([FromBody]String value)
         {
             var returnVal = new { Success = true,
                 Id = getMD5(DateTime.Now.ToString()),
