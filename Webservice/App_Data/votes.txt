@@ -1,0 +1,1 @@
+﻿gameId user1Id vote user2Id vote
