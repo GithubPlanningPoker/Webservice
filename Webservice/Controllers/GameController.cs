@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Http;
+using Webservice.DTOs;
 using Webservice.Models;
 
 namespace Webservice.Controllers
@@ -15,19 +16,20 @@ namespace Webservice.Controllers
     {
         [Route("")]
         [HttpPost]
-        public dynamic createGame([FromBody]String value)
+        public dynamic createGame([FromBody]NameDTO value)
         {
             var returnVal = new { Success = true,
                 Id = getMD5(DateTime.Now.ToString()),
-                HostId = getMD5(value + DateTime.Now.ToString()) };
+                HostId = getMD5(value.name + DateTime.Now.ToString()) };
 
             return returnVal;
         }
 
         [Route("{gameId:int}/user")]
         [HttpPost]
-        public dynamic joinGame(int gameId, [FromBody]String value)
+        public dynamic joinGame(int gameId, [FromBody]NameDTO value)
         {
+            String name = value.name;
             throw new NotImplementedException();
         }
 
@@ -40,10 +42,10 @@ namespace Webservice.Controllers
 
         [Route("{gameId:int}/description")]
         [HttpPut]
-        public dynamic updateDescription(int gameId, [FromBody]List<String> value)
+        public dynamic updateDescription(int gameId, [FromBody]DescriptionUserIdDTO value)
         {
-            String description = value[0]; //TODO not entirely sure that this will work
-            String userId = value[1];
+            String description = value.description; //TODO not entirely sure that this will work
+            String userId = value.userId;
 
             throw new NotImplementedException();
         }
@@ -64,15 +66,17 @@ namespace Webservice.Controllers
 
         [Route("{gameId:int}/vote")]
         [HttpDelete]
-        public dynamic clearVotes(int gameId, [FromBody]String value)
+        public dynamic clearVotes(int gameId, [FromBody]UserIdDTO value)
         {
+            String userId = value.userId;
             throw new NotImplementedException();
         }
 
         [Route("{gameId:int}/vote/{userId:int}")]
         [HttpPost]
-        public dynamic addVote(int gameId, int userId)
+        public dynamic addVote(int gameId, int userId, [FromBody]VoteDTO value)
         {
+            String vote = value.vote;
             throw new NotImplementedException();
         }
 
