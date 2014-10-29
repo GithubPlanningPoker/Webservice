@@ -55,6 +55,8 @@ namespace Webservice.Models
 
         public static void Vote(string gameId, string userId, string vote)
         {
+            if (!validVote(vote))
+                throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ? ." + " Parameter given: " + vote);
             string filePath = getFile(gameId);
             string[] lines = File.ReadAllLines(filePath);
             foreach (string entry in lines[USER_INFO].Split(' '))
@@ -84,6 +86,29 @@ namespace Webservice.Models
                 votes.Add(user, vote);
             }
             return votes;
+        }
+
+        private static bool validVote(string vote)
+        {
+            switch (vote)
+            {
+                case "0":
+                case "half":
+                case "1":
+                case "2":
+                case "3":
+                case "5":
+                case "8":
+                case "13":
+                case "20":
+                case "40":
+                case "100":
+                case "inf":
+                case "?":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private static void save(string filePath, string[] lines)

@@ -21,16 +21,31 @@ namespace Webservice.Controllers
             var returnVal = new { Success = true,
                 Id = getMD5(DateTime.Now.ToString()),
                 HostId = getMD5(value.name + DateTime.Now.ToString()) };
-
+            try
+            {
+                Database.CreateGame(returnVal.Id, returnVal.HostId);
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }            
             return returnVal;
         }
 
         [Route("{gameId:int}/user")]
         [HttpPost]
-        public dynamic joinGame(int gameId, [FromBody]NameDTO value)
+        public dynamic joinGame(string gameId, [FromBody]NameDTO value)
         {
-            String name = value.name;
-            throw new NotImplementedException();
+            var returnval = new { Succes = true, UserId = getMD5(value.name) };
+            try
+            {
+                Database.AddUser(gameId, returnval.UserId);
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
+            return returnval;
         }
 
         [Route("{gameId:int}/description")]
