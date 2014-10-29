@@ -1,1 +1,0 @@
-﻿gameId hostId user1Id user2Id

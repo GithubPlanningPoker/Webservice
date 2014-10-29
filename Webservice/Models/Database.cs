@@ -8,27 +8,17 @@ using System.Web;
 
 namespace Webservice.Models
 {
-    public enum Entry
-    {
-        Host = 0,
-        Description = 1,
-        Users = 2,
-        Votes = 3
-    }
-
     public static class Database
     {
-        private static int users = 2;
-        private static string gamesPath = HttpContext.Current.Server.MapPath("~/App_Data/games.txt");
-        private static string descriptionsPath = HttpContext.Current.Server.MapPath("~/App_Data/descriptions.txt");
-        private static string votesPath = HttpContext.Current.Server.MapPath("~/App_Data/votes.txt");
-        private static string path = HttpContext.Current.Server.MapPath("~/App_Data/");
+        private static int DESCRIPTION = 1;
+        private static int USER_INFO = 2;
+        private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data/");
 
-        private static string defaultVote = "NotVotedYet";
+        private static string defaultVote = null;
 
         public static void CreateGame(string gameId, string hostId)
         {
-            StreamWriter swGames = new StreamWriter(path + gameId + ".txt");
+            StreamWriter swGames = new StreamWriter(PATH + gameId + ".txt");
             swGames.WriteLine(hostId);
             swGames.WriteLine();
             swGames.WriteLine();
@@ -40,14 +30,14 @@ namespace Webservice.Models
             string filePath = getFile(gameId);            
             string[] lines = File.ReadAllLines(filePath);
             lines[2] += userId + "," + defaultVote;
-            save(path, lines);
+            save(PATH, lines);
         }        
 
         public static void UpdateDescription(string gameId, string description)
         {
             string filePath = getFile(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[1] = description;
+            lines[DESCRIPTION] = description;
             save(filePath, lines);
         }
 
@@ -60,7 +50,26 @@ namespace Webservice.Models
         {
             string filePath = getFile(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            return lines[1];
+            return lines[DESCRIPTION];
+        }
+
+        public static void Vote(string gameId, string userId, string vote)
+        {
+            string filePath = getFile(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            foreach (string entry in lines[USER_INFO].Split(' '))
+            {
+                if (userId == entry.Split(',')[0])
+                {
+                    entry.Split(',')[1] = vote;
+                }
+            }
+            save(filePath, lines);
+        }
+
+        public static void ClearVote(string gameId, string userId, string vote)
+        {
+            Vote(gameId, userId, null);
         }
 
         public static Dictionary<string, string> GetCurrentVotes(string gameId)
@@ -68,7 +77,7 @@ namespace Webservice.Models
             Dictionary<string, string> votes = new Dictionary<string, string>();
             string filePath = getFile(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            foreach (string entry in lines[2].Split(' '))
+            foreach (string entry in lines[USER_INFO].Split(' '))
             {
                 string user = entry.Split(',')[0];
                 string vote = entry.Split(',')[1];
@@ -86,11 +95,10 @@ namespace Webservice.Models
             }
         }
 
-
         private static string getFile(string gameId)
         {
             string file = "";
-            foreach (var fileName in Directory.GetFiles(path, "*.txt").Select(Path.GetFileName))
+            foreach (var fileName in Directory.GetFiles(PATH, "*.txt").Select(Path.GetFileName))
             {
                 if (gameId == fileName)
                     file = fileName;
