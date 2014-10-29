@@ -69,7 +69,7 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void ClearVote(string gameId, string userId, string vote)
+        public static void ClearVote(string gameId, string userId)
         {
             Vote(gameId, userId, null);
         }
@@ -92,6 +92,7 @@ namespace Webservice.Models
         {
             switch (vote)
             {
+                case null:
                 case "0":
                 case "half":
                 case "1":

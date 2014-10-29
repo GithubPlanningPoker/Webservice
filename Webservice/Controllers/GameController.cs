@@ -50,49 +50,90 @@ namespace Webservice.Controllers
 
         [Route("{gameId:int}/description")]
         [HttpGet]
-        public dynamic getDescription(int gameId)
+        public dynamic getDescription(string gameId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return new { Succes = true, Description = Database.GetDescription(gameId) };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         [Route("{gameId:int}/description")]
         [HttpPut]
-        public dynamic updateDescription(int gameId, [FromBody]DescriptionUserIdDTO value)
+        public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
         {
-            String description = value.description; //TODO not entirely sure that this will work
-            String userId = value.userId;
-
-            throw new NotImplementedException();
+            try
+            {
+                Database.UpdateDescription(gameId, value.description);
+                return new { Succes = true };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         [Route("{gameId:int}/description")]
         [HttpDelete]
-        public dynamic clearDescription(int gameId)
+        public dynamic clearDescription(string gameId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Database.ClearDescription(gameId);
+                return new { Succes = true };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         [Route("{gameId:int}/vote")]
         [HttpGet]
-        public dynamic getVotes(int gameId)
+        public dynamic getVotes(string gameId)
         {
-            throw new NotImplementedException();
+            try
+            {                
+                return new { Succes = true, Votes = Database.GetCurrentVotes(gameId) };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         [Route("{gameId:int}/vote")]
         [HttpDelete]
-        public dynamic clearVotes(int gameId, [FromBody]UserIdDTO value)
+        public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
         {
-            String userId = value.userId;
-            throw new NotImplementedException();
+            try
+            {
+                Database.ClearVote(gameId, value.userId);
+                return new { Succes = true };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         [Route("{gameId:int}/vote/{userId:int}")]
         [HttpPost]
-        public dynamic addVote(int gameId, int userId, [FromBody]VoteDTO value)
+        public dynamic addVote(string gameId, string userId, [FromBody]VoteDTO value)
         {
-            String vote = value.vote;
-            throw new NotImplementedException();
+            try
+            {
+                Database.Vote(gameId, userId, value.vote);
+                return new { Succes = true };
+            }
+            catch (Exception e)
+            {
+                return new { Succes = false, e.Message };
+            }
         }
 
         private String getMD5(String input)
