@@ -27,7 +27,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }            
             return returnVal;
         }
@@ -43,7 +43,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
             return returnval;
         }
@@ -58,7 +58,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
@@ -73,7 +73,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
@@ -88,7 +88,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
@@ -102,7 +102,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
@@ -117,7 +117,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
@@ -132,7 +132,7 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { success = false, e.Message };
+                return new { success = false, message = e.Message };
             }
         }
 
