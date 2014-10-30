@@ -19,11 +19,11 @@ namespace Webservice.Controllers
         public dynamic createGame([FromBody]NameDTO value)
         {
             var returnVal = new { success = true,
-                id = getMD5(DateTime.Now.ToString()),
+                gameid = getMD5(DateTime.Now.ToString()),
                 userid = getMD5(value.name + DateTime.Now.ToString()) };
             try
             {
-                Database.CreateGame(returnVal.id, returnVal.userid);
+                Database.CreateGame(returnVal.gameid, returnVal.userid);
             }
             catch (Exception e)
             {
