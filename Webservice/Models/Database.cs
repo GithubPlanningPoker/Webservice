@@ -26,7 +26,8 @@ namespace Webservice.Models
 
         public static void AddUser(string gameId, string userId)
         {
-            string filePath = getFile(gameId);            
+            string filePath = getFile(gameId);
+            throw new Exception(filePath);
             string[] lines = File.ReadAllLines(filePath);
             lines[2] += userId + "," + defaultVote;
             save(PATH, lines);
@@ -117,6 +118,7 @@ namespace Webservice.Models
             {
                 foreach (String l in lines)
                     writer.WriteLine(l);
+                writer.Close();
             }
         }
 
