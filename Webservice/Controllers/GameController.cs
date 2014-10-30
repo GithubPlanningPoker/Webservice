@@ -11,7 +11,7 @@ using Webservice.Models;
 
 namespace Webservice.Controllers
 {
-    [RoutePrefix("api/game")]
+    [RoutePrefix("game")]
     public class GameController : ApiController
     {
         [Route("")]
