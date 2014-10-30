@@ -12,13 +12,12 @@ namespace Webservice.Models
     {
         private static int DESCRIPTION = 1;
         private static int USER_INFO = 2;
-        private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data/");
-
+        private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data");
         private static string defaultVote = null;
 
         public static void CreateGame(string gameId, string hostId)
         {
-            StreamWriter swGames = new StreamWriter(PATH + gameId + ".txt", true);
+            StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".txt"), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
             swGames.WriteLine();

@@ -18,16 +18,16 @@ namespace Webservice.Controllers
         [HttpPost]
         public dynamic createGame([FromBody]NameDTO value)
         {
-            var returnVal = new { Success = true,
-                Id = getMD5(DateTime.Now.ToString()),
-                HostId = getMD5(value.name + DateTime.Now.ToString()) };
+            var returnVal = new { success = true,
+                id = getMD5(DateTime.Now.ToString()),
+                userid = getMD5(value.name + DateTime.Now.ToString()) };
             try
             {
-                Database.CreateGame(returnVal.Id, returnVal.HostId);
+                Database.CreateGame(returnVal.id, returnVal.userid);
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }            
             return returnVal;
         }
@@ -36,14 +36,14 @@ namespace Webservice.Controllers
         [HttpPost]
         public dynamic joinGame(string gameId, [FromBody]NameDTO value)
         {
-            var returnval = new { Succes = true, UserId = getMD5(value.name) };
+            var returnval = new { success = true, userid = getMD5(value.name) };
             try
             {
-                Database.AddUser(gameId, returnval.UserId);
+                Database.AddUser(gameId, returnval.userid);
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { succes = false, e.Message };
             }
             return returnval;
         }
@@ -54,11 +54,11 @@ namespace Webservice.Controllers
         {
             try
             {
-                return new { Succes = true, Description = Database.GetDescription(gameId) };
+                return new { succes = true, description = Database.GetDescription(gameId) };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { succes = false, e.Message };
             }
         }
 
@@ -69,11 +69,11 @@ namespace Webservice.Controllers
             try
             {
                 Database.UpdateDescription(gameId, value.description);
-                return new { Succes = true };
+                return new { success = true };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
@@ -84,11 +84,11 @@ namespace Webservice.Controllers
             try
             {
                 Database.ClearDescription(gameId);
-                return new { Succes = true };
+                return new { success = true };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
@@ -98,11 +98,11 @@ namespace Webservice.Controllers
         {
             try
             {                
-                return new { Succes = true, Votes = Database.GetCurrentVotes(gameId) };
+                return new { success = true, votes = Database.GetCurrentVotes(gameId) };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
@@ -113,11 +113,11 @@ namespace Webservice.Controllers
             try
             {
                 Database.ClearVote(gameId, value.userId);
-                return new { Succes = true };
+                return new { success = true };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
@@ -128,11 +128,11 @@ namespace Webservice.Controllers
             try
             {
                 Database.Vote(gameId, userId, value.vote);
-                return new { Succes = true };
+                return new { success = true };
             }
             catch (Exception e)
             {
-                return new { Succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
