@@ -121,7 +121,7 @@ namespace Webservice.Controllers
             }
         }
 
-        [Route("{gameId}/vote/{userId:int}")]
+        [Route("{gameId}/vote/{userId}")]
         [HttpPost]
         public dynamic addVote(string gameId, string userId, [FromBody]VoteDTO value)
         {
