@@ -18,7 +18,7 @@ namespace Webservice.Models
 
         public static void CreateGame(string gameId, string hostId)
         {
-            StreamWriter swGames = new StreamWriter(PATH + gameId + ".txt");
+            StreamWriter swGames = new StreamWriter(PATH + gameId + ".txt", true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
             swGames.WriteLine();
