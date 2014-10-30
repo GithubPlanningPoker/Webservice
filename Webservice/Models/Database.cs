@@ -122,15 +122,11 @@ namespace Webservice.Models
 
         private static string getFile(string gameId)
         {
-            string file = "";
-            foreach (var fileName in Directory.GetFiles(PATH, "*.txt").Select(Path.GetFileName))
-            {
-                if (gameId == fileName)
-                    file = fileName;
-            }
-            if (file == "")
+            string filePath = Path.Combine(PATH, gameId + ".txt");
+            if (File.Exists(filePath))
+                return filePath;
+            else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
-            return file;
         }
     }
 }
