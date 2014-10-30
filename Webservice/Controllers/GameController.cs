@@ -32,7 +32,7 @@ namespace Webservice.Controllers
             return returnVal;
         }
 
-        [Route("{gameId:int}/user")]
+        [Route("{gameId}/user")]
         [HttpPost]
         public dynamic joinGame(string gameId, [FromBody]NameDTO value)
         {
@@ -43,26 +43,26 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new { succes = false, e.Message };
+                return new { success = false, e.Message };
             }
             return returnval;
         }
 
-        [Route("{gameId:int}/description")]
+        [Route("{gameId}/description")]
         [HttpGet]
         public dynamic getDescription(string gameId)
         {
             try
             {
-                return new { succes = true, description = Database.GetDescription(gameId) };
+                return new { success = true, description = Database.GetDescription(gameId) };
             }
             catch (Exception e)
             {
-                return new { succes = false, e.Message };
+                return new { success = false, e.Message };
             }
         }
 
-        [Route("{gameId:int}/description")]
+        [Route("{gameId}/description")]
         [HttpPut]
         public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
         {
@@ -77,7 +77,7 @@ namespace Webservice.Controllers
             }
         }
 
-        [Route("{gameId:int}/description")]
+        [Route("{gameId}/description")]
         [HttpDelete]
         public dynamic clearDescription(string gameId)
         {
@@ -92,7 +92,7 @@ namespace Webservice.Controllers
             }
         }
 
-        [Route("{gameId:int}/vote")]
+        [Route("{gameId}/vote")]
         [HttpGet]
         public dynamic getVotes(string gameId)
         {
@@ -106,7 +106,7 @@ namespace Webservice.Controllers
             }
         }
 
-        [Route("{gameId:int}/vote")]
+        [Route("{gameId}/vote")]
         [HttpDelete]
         public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
         {
@@ -121,7 +121,7 @@ namespace Webservice.Controllers
             }
         }
 
-        [Route("{gameId:int}/vote/{userId:int}")]
+        [Route("{gameId}/vote/{userId}")]
         [HttpPost]
         public dynamic addVote(string gameId, string userId, [FromBody]VoteDTO value)
         {
