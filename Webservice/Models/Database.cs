@@ -15,12 +15,15 @@ namespace Webservice.Models
         private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data");
         private static string defaultVote = "null";
 
+        private static string USER_SEPARATOR = ";:;:;:";
+        private static string VALUE_SEPARATOR = "-_-_-_-_-_";
+
         public static void CreateGame(string gameId, string hostId, string username)
         {
             StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".txt"), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
-            swGames.WriteLine(hostId + "," + username + "," + defaultVote);
+            swGames.WriteLine(hostId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote);
             swGames.Close();
         }
 
@@ -28,7 +31,7 @@ namespace Webservice.Models
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[USER_INFO] += " " + userId + "," + defaultVote;
+            lines[USER_INFO] += USER_SEPARATOR + userId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote;
             save(filePath, lines);
         }
 
@@ -58,13 +61,18 @@ namespace Webservice.Models
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ? ." + " Parameter given: " + vote);
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            foreach (string entry in lines[USER_INFO].Split(' '))
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            for (int i = 0; i < users.Length; i++)
             {
-                if (userId == entry.Split(',')[0])
+                string[] values = users[i].Split(VALUE_SEPARATOR);
+                if (userId == values[0])
                 {
-                    entry.Split(',')[2] = vote;
+                    values[2] = vote;
+                    users[i] = string.Join(VALUE_SEPARATOR, values);
+                    break;
                 }
             }
+            lines[2] = string.Join(USER_SEPARATOR, users);
             save(filePath, lines);
         }
 
@@ -77,10 +85,11 @@ namespace Webservice.Models
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            foreach (string entry in lines[USER_INFO].Split(' '))
+            foreach (string entry in lines[USER_INFO].Split(USER_SEPARATOR))
             {
-                string name = entry.Split(',')[1];
-                string vote = entry.Split(',')[2];
+                string[] values = entry.Split(VALUE_SEPARATOR);
+                string name = values[1];
+                string vote = values[2];
                 if (vote == "null")
                     vote = null;
                 yield return new { name, vote };
@@ -133,6 +142,14 @@ namespace Webservice.Models
         public static bool GameExists(string gameId)
         {
             return File.Exists(Path.Combine(PATH, gameId + ".txt"));
+        }
+    }
+
+    public static class StringSplitter
+    {
+        public static string[] Split(this string text, string split)
+        {
+            return text.Split(new string[] { split }, StringSplitOptions.None);
         }
     }
 }
