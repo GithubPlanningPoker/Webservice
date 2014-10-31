@@ -23,17 +23,20 @@ namespace Webservice.Controllers
             {
                 gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
             }
-            var returnVal = new { success = true,
+            var returnVal = new
+            {
+                success = true,
                 gameid = gameIdHash,
-                userid = getMD5(value.name + DateTime.Now.ToString()) };
+                userid = getMD5(value.name + DateTime.Now.ToString())
+            };
             try
             {
-                Database.CreateGame(returnVal.gameid, returnVal.userid);
+                Database.CreateGame(returnVal.gameid, returnVal.userid, value.name);
             }
             catch (Exception e)
             {
                 return new { success = false, message = e.Message };
-            }            
+            }
             return returnVal;
         }
 
@@ -44,7 +47,7 @@ namespace Webservice.Controllers
             var returnval = new { success = true, userid = getMD5(value.name) };
             try
             {
-                Database.AddUser(gameId, returnval.userid);
+                Database.AddUser(gameId, returnval.userid, value.name);
             }
             catch (Exception e)
             {
@@ -102,8 +105,8 @@ namespace Webservice.Controllers
         public dynamic getVotes(string gameId)
         {
             try
-            {                
-                return new { success = true, votes = Database.GetCurrentVotes(gameId) };
+            {
+                return new { success = true, votes = Database.GetCurrentVotes(gameId).ToArray() };
             }
             catch (Exception e)
             {

@@ -15,20 +15,20 @@ namespace Webservice.Models
         private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data");
         private static string defaultVote = "null";
 
-        public static void CreateGame(string gameId, string hostId)
+        public static void CreateGame(string gameId, string hostId, string username)
         {
             StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".txt"), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
-            swGames.WriteLine();
+            swGames.WriteLine(hostId + "," + username + "," + defaultVote);
             swGames.Close();
         }
 
-        public static void AddUser(string gameId, string userId)
+        public static void AddUser(string gameId, string userId, string username)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[2] += userId + "," + defaultVote;
+            lines[USER_INFO] += " " + userId + "," + defaultVote;
             save(filePath, lines);
         }
 
@@ -62,7 +62,7 @@ namespace Webservice.Models
             {
                 if (userId == entry.Split(',')[0])
                 {
-                    entry.Split(',')[1] = vote;
+                    entry.Split(',')[2] = vote;
                 }
             }
             save(filePath, lines);
@@ -73,18 +73,18 @@ namespace Webservice.Models
             Vote(gameId, userId, null);
         }
 
-        public static Dictionary<string, string> GetCurrentVotes(string gameId)
+        public static IEnumerable<object> GetCurrentVotes(string gameId)
         {
-            Dictionary<string, string> votes = new Dictionary<string, string>();
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             foreach (string entry in lines[USER_INFO].Split(' '))
             {
-                string user = entry.Split(',')[0];
-                string vote = entry.Split(',')[1];
-                votes.Add(user, vote);
+                string name = entry.Split(',')[1];
+                string vote = entry.Split(',')[2];
+                if (vote == "null")
+                    vote = null;
+                yield return new { name, vote };
             }
-            return votes;
         }
 
         private static bool validVote(string vote)
