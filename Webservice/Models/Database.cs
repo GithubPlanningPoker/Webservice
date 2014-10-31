@@ -13,7 +13,7 @@ namespace Webservice.Models
         private static int DESCRIPTION = 1;
         private static int USER_INFO = 2;
         private static string PATH = HttpContext.Current.Server.MapPath("~/App_Data");
-        private static string defaultVote = null;
+        private static string defaultVote = "null";
 
         public static void CreateGame(string gameId, string hostId)
         {
@@ -26,7 +26,7 @@ namespace Webservice.Models
 
         public static void AddUser(string gameId, string userId)
         {
-            string filePath = getFile(gameId);
+            string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             lines[2] += userId + "," + defaultVote;
             save(PATH, lines);
@@ -34,7 +34,7 @@ namespace Webservice.Models
 
         public static void UpdateDescription(string gameId, string description)
         {
-            string filePath = getFile(gameId);
+            string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             lines[DESCRIPTION] = description;
             save(filePath, lines);
@@ -47,7 +47,7 @@ namespace Webservice.Models
 
         public static string GetDescription(string gameId)
         {
-            string filePath = getFile(gameId);
+            string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             return lines[DESCRIPTION];
         }
@@ -56,7 +56,7 @@ namespace Webservice.Models
         {
             if (!validVote(vote))
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ? ." + " Parameter given: " + vote);
-            string filePath = getFile(gameId);
+            string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             foreach (string entry in lines[USER_INFO].Split(' '))
             {
@@ -76,7 +76,7 @@ namespace Webservice.Models
         public static Dictionary<string, string> GetCurrentVotes(string gameId)
         {
             Dictionary<string, string> votes = new Dictionary<string, string>();
-            string filePath = getFile(gameId);
+            string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             foreach (string entry in lines[USER_INFO].Split(' '))
             {
@@ -121,13 +121,18 @@ namespace Webservice.Models
             }
         }
 
-        private static string getFile(string gameId)
+        private static string getFilePath(string gameId)
         {
             string filePath = Path.Combine(PATH, gameId + ".txt");
             if (File.Exists(filePath))
                 return filePath;
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
+        }
+
+        public static bool GameExists(string gameId)
+        {
+            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
         }
     }
 }
