@@ -29,8 +29,8 @@ namespace Webservice.Models
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             lines[2] += userId + "," + defaultVote;
-            save(PATH, lines);
-        }        
+            save(filePath, lines);
+        }
 
         public static void UpdateDescription(string gameId, string description)
         {
