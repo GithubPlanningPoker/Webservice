@@ -71,7 +71,7 @@ namespace Webservice.Controllers
         }
 
         [Route("{gameId}/description")]
-        [HttpPut]
+        [HttpPost]
         public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
         {
             try
