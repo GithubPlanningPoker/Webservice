@@ -19,8 +19,12 @@ namespace Webservice.Controllers
         public dynamic createGame([FromBody]NameDTO value)
         {
             string gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
+            while (Database.GameExists(gameIdHash))
+            {
+                gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
+            }
             var returnVal = new { success = true,
-                gameid = Database.GameExists(gameIdHash) ? createGame(value) : gameIdHash,
+                gameid = gameIdHash,
                 userid = getMD5(value.name + DateTime.Now.ToString()) };
             try
             {
