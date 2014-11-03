@@ -76,9 +76,28 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void ClearVote(string gameId, string userId)
+        public static void ClearVotes(string gameId, string userId)
         {
-            Vote(gameId, userId, null);
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            isHost(users, userId);
+            for (int i = 0; i < users.Length; i++)
+            {
+                string[] values = users[i].Split(VALUE_SEPARATOR);
+                values[2] = defaultVote;
+                users[i] = string.Join(VALUE_SEPARATOR, values);
+            }
+            lines[2] = string.Join(USER_SEPARATOR, users);
+            save(filePath, lines);
+        }
+
+        private static void isHost(string[] users, string userId)
+        {
+            if (users[0].Split(VALUE_SEPARATOR)[0] == userId)
+                return;
+            else
+                throw new ArgumentException("The user id given must be the host to clear votes.");
         }
 
         public static IEnumerable<object> GetCurrentVotes(string gameId)

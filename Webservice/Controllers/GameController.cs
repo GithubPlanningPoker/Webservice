@@ -120,7 +120,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                Database.ClearVote(gameId, value.userId);
+                Database.ClearVotes(gameId, value.userId);
                 return new { success = true };
             }
             catch (Exception e)
