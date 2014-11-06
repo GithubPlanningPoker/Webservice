@@ -109,6 +109,19 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
+        public static void DeleteUser(string gameId, string username, string userId)
+        {
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            isHost(users, userId);
+            for (int i = 0; i < users.Length; i++)
+            {
+                if (users[i].Split(VALUE_SEPARATOR)[1] == username)
+                    users[i] = "";
+            }
+        }
+
         private static void isHost(string[] users, string userId)
         {
             if (users[0].Split(VALUE_SEPARATOR)[0] == userId)
