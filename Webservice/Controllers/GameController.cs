@@ -76,7 +76,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                Database.UpdateDescription(gameId, value.description);
+                Database.UpdateDescription(gameId, value.title, value.description);
                 return new { success = true };
             }
             catch (Exception e)

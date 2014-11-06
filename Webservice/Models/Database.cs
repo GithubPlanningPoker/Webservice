@@ -17,6 +17,8 @@ namespace Webservice.Models
 
         private static string USER_SEPARATOR = ";:;:;:";
         private static string VALUE_SEPARATOR = "-_-_-_-_-_";
+        private static string DESCRIPTION_SEPARATOR = "*********";
+        private static string NEWLINE = "^*^*";
 
         public static void CreateGame(string gameId, string hostId, string username)
         {
@@ -35,24 +37,31 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void UpdateDescription(string gameId, string description)
+        public static void UpdateDescription(string gameId, string title, string description)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = description;
+            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
             save(filePath, lines);
         }
 
         public static void ClearDescription(string gameId)
         {
-            UpdateDescription(gameId, "");
+            UpdateDescription(gameId, "" ,"");
+        }
+
+        public static string GetDescriptionTitle(string gameId)
+        {
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE,"\n");
         }
 
         public static string GetDescription(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            return lines[DESCRIPTION];
+            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE,"\n");
         }
 
         public static void Vote(string gameId, string userId, string vote)

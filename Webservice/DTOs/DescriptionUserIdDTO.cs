@@ -7,6 +7,7 @@ namespace Webservice.DTOs
 {
     public class DescriptionUserIdDTO
     {
+        public String title { get; set; }
         public String description { get; set; }
         public String userId { get; set; }
     }
