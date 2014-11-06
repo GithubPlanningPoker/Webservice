@@ -39,6 +39,10 @@ namespace Webservice.Models
 
         public static void UpdateDescription(string gameId, string title, string description)
         {
+            if (title == null)
+                title = "";
+            if (description == null)
+                description = "";
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
@@ -54,6 +58,8 @@ namespace Webservice.Models
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
+            if (lines[DESCRIPTION] == "")
+                return "";
             return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE,"\n");
         }
 
@@ -61,6 +67,8 @@ namespace Webservice.Models
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
+            if (lines[DESCRIPTION] == "")
+                return "";
             return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE,"\n");
         }
 

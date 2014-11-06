@@ -62,7 +62,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                return new { success = true, description = Database.GetDescription(gameId) };
+                return new { success = true, title = Database.GetDescriptionTitle(gameId), description = Database.GetDescription(gameId) };
             }
             catch (Exception e)
             {
@@ -71,7 +71,7 @@ namespace Webservice.Controllers
         }
 
         [Route("{gameId}/description")]
-        [HttpPost]
+        [HttpPut]
         public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
         {
             try
