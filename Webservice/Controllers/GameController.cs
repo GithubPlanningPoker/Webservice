@@ -144,6 +144,21 @@ namespace Webservice.Controllers
             }
         }
 
+        [Route("{gameId}/user/{username}")]
+        [HttpDelete]
+        public dynamic kickuser(string gameId, string username, [FromBody]UserIdDTO value)
+        {
+            try
+            {
+                Database.DeleteUser(gameId, username, value.userId);
+                return new { success = true };
+            }
+            catch (Exception e)
+            {
+                return new { success = false, message = e.Message };
+            }
+        }
+
         private String getMD5(String input)
         {
             MD5 md5Hash = MD5.Create();
