@@ -33,6 +33,13 @@ namespace Webservice.Models
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            for (int i = 0; i < users.Length; i++)
+            {
+                string[] values = users[i].Split(VALUE_SEPARATOR);
+                if (username == values[1])
+                    throw new ArgumentException("Username already exists.");
+            }
             lines[USER_INFO] += USER_SEPARATOR + userId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote;
             save(filePath, lines);
         }
