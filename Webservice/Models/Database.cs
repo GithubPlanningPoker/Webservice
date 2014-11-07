@@ -91,6 +91,8 @@ namespace Webservice.Models
                 string[] values = users[i].Split(VALUE_SEPARATOR);
                 if (userId == values[0])
                 {
+                    if (values[2] != defaultVote)
+                        throw new ArgumentException("The user: " + values[1] + " has already voted.");
                     values[2] = vote;
                     users[i] = string.Join(VALUE_SEPARATOR, values);
                     break;
