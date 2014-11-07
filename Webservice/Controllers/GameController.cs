@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Http;
 using Webservice.DTOs;
+using Webservice.Maintenance;
 using Webservice.Models;
 
 namespace Webservice.Controllers
@@ -18,6 +19,7 @@ namespace Webservice.Controllers
         [HttpPost]
         public dynamic createGame([FromBody]NameDTO value)
         {
+            FileCleaner.DeleteFiles(24); //Delete files which were not modified in the past 24 hours.
             string gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
             while (Database.GameExists(gameIdHash))
             {
