@@ -42,6 +42,26 @@ namespace Webservice.Controllers
             return returnVal;
         }
 
+        [Route("{gameId}")]
+        [HttpGet]
+        public dynamic getGame(string gameId)
+        {
+            try
+            {
+                return new
+                {
+                    success = true,
+                    title = Database.GetDescriptionTitle(gameId),
+                    description = Database.GetDescription(gameId),
+                    votes = Database.GetCurrentVotes(gameId).ToArray()
+                };
+            }
+            catch (Exception e)
+            {
+                return new { success = false, message = e.Message };
+            }
+        }
+
         [Route("{gameId}/user")]
         [HttpPost]
         public dynamic joinGame(string gameId, [FromBody]NameDTO value)
