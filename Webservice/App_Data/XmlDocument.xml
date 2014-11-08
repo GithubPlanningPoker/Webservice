@@ -481,5 +481,11 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:Webservice.Maintenance.FileCleaner.DeleteFiles(System.Int32)">
+            <summary>
+            Deletes the files older than the given hours.
+            </summary>
+            <param name="hours">The hours for how long to keep a file since it was last modified before it gets deleted.</param>
+        </member>
     </members>
 </doc>
