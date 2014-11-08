@@ -481,6 +481,101 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="T:Webservice.Controllers.GameController">
+            <summary>
+            A Planning Poker game.
+            </summary>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.createGame(Webservice.DTOs.NameDTO)">
+            <summary>
+            Create a new game, with the provided username as host.
+            </summary>
+            <param name="value">The host name.</param>
+            <returns>The gameId and the host's userId.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.getGame(System.String)">
+            <summary>
+            Gets all game information
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <returns>The game's title, description, and votes.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.joinGame(System.String,Webservice.DTOs.NameDTO)">
+            <summary>
+            Join a game with the provided username.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="value">The username.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.getDescription(System.String)">
+            <summary>
+            Gets the current description
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <returns>The game's title and description.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.updateDescription(System.String,Webservice.DTOs.DescriptionUserIdDTO)">
+            <summary>
+            Updates the game's description.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="value">New title and/or description.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.clearDescription(System.String)">
+            <summary>
+            Clears the game's description.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.getVotes(System.String)">
+            <summary>
+            Gets the game's current votes.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <returns>The votes.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.clearVotes(System.String,Webservice.DTOs.UserIdDTO)">
+            <summary>
+            Clears the game's current votes.
+            (Only the host can clear votes.)
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="value">The userId.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.addVote(System.String,System.String,Webservice.DTOs.VoteDTO)">
+            <summary>
+            User casts vote to the game.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="userId">The userId.</param>
+            <param name="value">The vote.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.kickUser(System.String,System.String,Webservice.DTOs.UserIdDTO)">
+            <summary>
+            Kicks a user from the game.
+            (Only host can kick users.)
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="username">The userId of the kickee.</param>
+            <param name="value">The userId of the kicker.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="T:Webservice.Controllers.VersionController">
+            <summary>
+            Version number is used by clients to check whether API specfications have changed
+            </summary>
+        </member>
+        <member name="M:Webservice.Controllers.VersionController.getVersion">
+            <summary>
+            Gets the latest version number
+            </summary>
+            <returns>The version number.</returns>
+        </member>
         <member name="M:Webservice.Maintenance.FileCleaner.DeleteFiles(System.Int32)">
             <summary>
             Deletes the files older than the given hours.

@@ -12,9 +12,17 @@ using Webservice.Models;
 
 namespace Webservice.Controllers
 {
+    /// <summary>
+    /// A Planning Poker game.
+    /// </summary>
     [RoutePrefix("game")]
     public class GameController : ApiController
     {
+        /// <summary>
+        /// Create a new game, with the provided username as host.
+        /// </summary>
+        /// <param name="value">The host name.</param>
+        /// <returns>The gameId and the host's userId.</returns>
         [Route("")]
         [HttpPost]
         public dynamic createGame([FromBody]NameDTO value)
@@ -42,6 +50,11 @@ namespace Webservice.Controllers
             return returnVal;
         }
 
+        /// <summary>
+        /// Gets all game information
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <returns>The game's title, description, and votes.</returns>
         [Route("{gameId}")]
         [HttpGet]
         public dynamic getGame(string gameId)
@@ -62,6 +75,12 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Join a game with the provided username.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="value">The username.</param>
+        /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpPost]
         public dynamic joinGame(string gameId, [FromBody]NameDTO value)
@@ -78,6 +97,11 @@ namespace Webservice.Controllers
             return returnval;
         }
 
+        /// <summary>
+        /// Gets the current description
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <returns>The game's title and description.</returns>
         [Route("{gameId}/description")]
         [HttpGet]
         public dynamic getDescription(string gameId)
@@ -92,6 +116,12 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the game's description.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="value">New title and/or description.</param>
+        /// <returns>Success.</returns>
         [Route("{gameId}/description")]
         [HttpPut]
         public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
@@ -107,6 +137,11 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Clears the game's description.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <returns>Success.</returns>
         [Route("{gameId}/description")]
         [HttpDelete]
         public dynamic clearDescription(string gameId)
@@ -122,6 +157,11 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the game's current votes.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <returns>The votes.</returns>
         [Route("{gameId}/vote")]
         [HttpGet]
         public dynamic getVotes(string gameId)
@@ -136,6 +176,13 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Clears the game's current votes.
+        /// (Only the host can clear votes.)
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="value">The userId.</param>
+        /// <returns>Success.</returns>
         [Route("{gameId}/vote")]
         [HttpDelete]
         public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
@@ -151,6 +198,13 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// User casts vote to the game.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="userId">The userId.</param>
+        /// <param name="value">The vote.</param>
+        /// <returns>Success.</returns>
         [Route("{gameId}/vote/{userId}")]
         [HttpPost]
         public dynamic addVote(string gameId, string userId, [FromBody]VoteDTO value)
@@ -166,12 +220,21 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Kicks a user from the game.
+        /// (Only host can kick users.)
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="username">The userId of the kickee.</param>
+        /// <param name="value">The userId of the kicker.</param>
+        /// <returns>Success.</returns>
         [Route("{gameId}/user/{username}")]
         [HttpDelete]
-        public dynamic kickuser(string gameId, string username, [FromBody]UserIdDTO value)
+        public dynamic kickUser(string gameId, string username, [FromBody]UserIdDTO value)
         {
             try
             {
+                throw new NotImplementedException("Not sure Bruno is done with this. - Mikael");
                 Database.DeleteUser(gameId, username, value.userId);
                 return new { success = true };
             }
