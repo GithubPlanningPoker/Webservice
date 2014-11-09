@@ -21,9 +21,9 @@ namespace Webservice.Controllers
         /// <returns>The version number.</returns>
         [Route("")]
         [HttpGet]
-        public int getVersion()
+        public dynamic getVersion()
         {
-            return VERSION_NUMBER;
+            return new { version = VERSION_NUMBER };
         }
     }
 }
