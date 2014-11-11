@@ -139,7 +139,7 @@ namespace Webservice.Models
                 throw new ArgumentException("The user id given must be the host to clear votes.");
         }
 
-        public static IEnumerable<object> GetCurrentVotes(string gameId)
+        public static IEnumerable<object> GetUsers(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -201,6 +201,16 @@ namespace Webservice.Models
         public static bool GameExists(string gameId)
         {
             return File.Exists(Path.Combine(PATH, gameId + ".txt"));
+        }
+
+        internal static object GetHost(string gameId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void UpdateTitle(string gameId, string p)
+        {
+            throw new NotImplementedException();
         }
     }
 

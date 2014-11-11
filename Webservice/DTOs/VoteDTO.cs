@@ -5,8 +5,10 @@ using System.Web;
 
 namespace Webservice.DTOs
 {
-    public class VoteDTO
+    public class VoteUserIdDTO
     {
-        public String vote { get; set; }
+        public string vote { get; set; }
+
+        public string userId { get; set; }
     }
 }
