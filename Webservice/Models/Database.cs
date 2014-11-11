@@ -161,6 +161,14 @@ namespace Webservice.Models
             return File.Exists(Path.Combine(PATH, gameId + ".txt"));
         }
 
+        internal static string GetHost(string gameId)
+        {
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            return users[0].Split(VALUE_SEPARATOR)[0];
+        }
+
         private static bool validUser(string gameId, string username, string userId)
         {
             return GetUsers(gameId).Where(u => u.Name == username && u.UserId == userId).Count() == 1;
@@ -172,11 +180,6 @@ namespace Webservice.Models
                 return;
             else
                 throw new ArgumentException("The user id given must be the host to clear votes.");
-        }
-
-        internal static object GetHost(string gameId)
-        {
-            throw new NotImplementedException();
         }
 
         private static bool validVote(string vote)
