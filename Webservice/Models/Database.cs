@@ -166,7 +166,7 @@ namespace Webservice.Models
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
-            return users[0].Split(VALUE_SEPARATOR)[0];
+            return users[0].Split(VALUE_SEPARATOR)[1];
         }
 
         private static bool validUser(string gameId, string username, string userId)
