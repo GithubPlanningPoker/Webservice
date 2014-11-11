@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Webservice.DTOs
 {
-    class TitleDTO
+    public class TitleDTO
     {
         public string title { get; set; }
     }

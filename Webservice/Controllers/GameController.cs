@@ -102,7 +102,7 @@ namespace Webservice.Controllers
         /// <returns>The game's title.</returns>
         [Route("{gameId}/title")]
         [HttpGet]
-        public dynamic getDescription(string gameId)
+        public dynamic getTitle(string gameId)
         {
             try
             {
@@ -254,8 +254,6 @@ namespace Webservice.Controllers
         {
             try
             {
-                //Change vote for user {username}
-                //Check whether value.userId equals userId for username in database
                 Database.Vote(gameId, username, value.vote, value.userId);
                 return new { success = true };
             }
