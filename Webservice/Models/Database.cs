@@ -44,24 +44,27 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void UpdateDescription(string gameId, string title, string description)
+        public static void UpdateTitle(string gameId, string title)
         {
             if (title == null)
                 title = "";
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + GetDescription(gameId);
+            save(filePath, lines);
+        }
+
+        public static void UpdateDescription(string gameId, string description)
+        {
             if (description == null)
                 description = "";
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
+            lines[DESCRIPTION] = GetTitle(gameId) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
             save(filePath, lines);
         }
 
-        public static void ClearDescription(string gameId)
-        {
-            UpdateDescription(gameId, "" ,"");
-        }
-
-        public static string GetDescriptionTitle(string gameId)
+        public static string GetTitle(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -154,6 +157,16 @@ namespace Webservice.Models
             }
         }
 
+        public static bool GameExists(string gameId)
+        {
+            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
+        }
+
+        internal static object GetHost(string gameId)
+        {
+            throw new NotImplementedException();
+        }
+
         private static bool validVote(string vote)
         {
             switch (vote)
@@ -196,21 +209,6 @@ namespace Webservice.Models
                 return filePath;
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
-        }
-
-        public static bool GameExists(string gameId)
-        {
-            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
-        }
-
-        internal static object GetHost(string gameId)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void UpdateTitle(string gameId, string p)
-        {
-            throw new NotImplementedException();
         }
     }
 
