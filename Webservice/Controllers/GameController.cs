@@ -232,8 +232,6 @@ namespace Webservice.Controllers
         {
             try
             {
-                //Change all votes to null
-                //Check if value.userId is equal to host userId
                 Database.ClearVotes(gameId, value.userId);
                 return new { success = true };
             }
