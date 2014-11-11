@@ -177,18 +177,30 @@ namespace Webservice.Controllers
 
         [Route("{gameId}/user")]
         [HttpGet]
-        public dynamic getVotes(string gameId)
+        public dynamic getUsers(string gameId)
         {
             try
             {
-                // Should return username, hasVoted, voteValue for all users
-                // (If not everyone has voted, voteValue should be null for all users)
-                return new { success = true, votes = Database.GetUsers(gameId).ToArray() };
+                var users = Database.GetUsers(gameId);
+                if (!hasEveryoneVoted(users))
+                {
+                    foreach (var user in users)
+                        user.Vote = null;
+                }
+                return new { success = true, users = users.ToArray() };
             }
             catch (Exception e)
             {
                 return new { success = false, message = e.Message };
             }
+        }
+
+        private static bool hasEveryoneVoted(IEnumerable<User> users)
+        {
+            foreach (var user in users)
+                if (user.Voted == false)
+                    return false;
+            return true;
         }
 
         /// <summary>

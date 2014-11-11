@@ -142,7 +142,7 @@ namespace Webservice.Models
                 throw new ArgumentException("The user id given must be the host to clear votes.");
         }
 
-        public static IEnumerable<object> GetUsers(string gameId)
+        public static IEnumerable<User> GetUsers(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -151,9 +151,13 @@ namespace Webservice.Models
                 string[] values = entry.Split(VALUE_SEPARATOR);
                 string name = values[1];
                 string vote = values[2];
+                bool voted = true;
                 if (vote == "null")
+                {
                     vote = null;
-                yield return new { name, vote };
+                    voted = false;
+                }
+                yield return new User(name, vote, voted);
             }
         }
 
