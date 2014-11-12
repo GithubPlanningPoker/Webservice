@@ -186,7 +186,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                var users = Database.GetUsers(gameId);
+                var users = Database.GetUsers(gameId).ToArray();
                 if (!hasEveryoneVoted(users))
                 {
                     foreach (var user in users)
