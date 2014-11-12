@@ -226,6 +226,12 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Clears the votes.
+        /// </summary>
+        /// <param name="gameId">The game identifier.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpPut]
         public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
