@@ -192,7 +192,7 @@ namespace Webservice.Controllers
                     foreach (var user in users)
                         user.Vote = null;
                 }
-                return new { success = true, users = users.ToArray() };
+                return new { success = true, users = convertUser(users) };
             }
             catch (Exception e)
             {
@@ -274,6 +274,11 @@ namespace Webservice.Controllers
             }
         }
 
+        private IEnumerable<PublicUser> convertUser(IEnumerable<User> users)
+        {
+            foreach (var user in users)
+                yield return new PublicUser(user.Name, user.Vote, user.Voted);
+        }
 
         private String getMD5(String input)
         {

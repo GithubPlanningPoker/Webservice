@@ -152,6 +152,7 @@
     </Compile>
     <Compile Include="Maintenance\FileCleaner.cs" />
     <Compile Include="Models\Database.cs" />
+    <Compile Include="Models\PublicUser.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

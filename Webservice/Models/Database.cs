@@ -172,7 +172,7 @@ namespace Webservice.Models
         {
             var users = GetUsers(gameId).Where(u => u.Name == username);
             if (users.Count() != 1)
-                throw new ArgumentException("The username does not exist.");
+                throw new ArgumentException("The username does not exist. The username given: " + username);
             if (users.Where(u => u.UserId == userId).Count() != 1)
                 throw new ArgumentException("The user id is wrong.");
         }
