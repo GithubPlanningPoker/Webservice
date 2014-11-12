@@ -86,8 +86,7 @@ namespace Webservice.Models
         {
             if (!validVote(vote))
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ?, break ." + " Parameter given: " + vote);
-            if (!validUser(gameId, username, userId))
-                throw new ArgumentException("The users ID is wrong.");
+            validUser(gameId, username, userId);
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
@@ -169,9 +168,13 @@ namespace Webservice.Models
             return users[0].Split(VALUE_SEPARATOR)[1];
         }
 
-        private static bool validUser(string gameId, string username, string userId)
+        private static void validUser(string gameId, string username, string userId)
         {
-            return GetUsers(gameId).Where(u => u.Name == username && u.UserId == userId).Count() == 1;
+            var users = GetUsers(gameId).Where(u => u.Name == username);
+            if (users.Count() != 1)
+                throw new ArgumentException("The username does not exist.");
+            if (users.Where(u => u.UserId == userId).Count() != 1)
+                throw new ArgumentException("The user id is wrong.");
         }
 
         private static void isHost(string[] users, string userId)
