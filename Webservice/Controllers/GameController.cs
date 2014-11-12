@@ -265,7 +265,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                Database.Vote(gameId, username, value.vote, value.userId);
+                Database.Vote(gameId, value.userId, value.vote, username);
                 return new { success = true };
             }
             catch (Exception e)
