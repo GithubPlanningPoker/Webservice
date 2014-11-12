@@ -175,6 +175,11 @@ namespace Webservice.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="gameId">The game identifier.</param>
+        /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpGet]
         public dynamic getUsers(string gameId)

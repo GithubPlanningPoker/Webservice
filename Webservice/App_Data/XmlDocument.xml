@@ -538,6 +538,13 @@
             <param name="value">New title and/or description.</param>
             <returns>Success.</returns>
         </member>
+        <member name="M:Webservice.Controllers.GameController.getUsers(System.String)">
+            <summary>
+            Gets the users.
+            </summary>
+            <param name="gameId">The game identifier.</param>
+            <returns></returns>
+        </member>
         <member name="M:Webservice.Controllers.GameController.kickUser(System.String,System.String,Webservice.DTOs.UserIdDTO)">
             <summary>
             Kicks a user from the game.
@@ -547,6 +554,14 @@
             <param name="username">The userId of the kickee.</param>
             <param name="value">The userId of the kicker.</param>
             <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.clearVotes(System.String,Webservice.DTOs.UserIdDTO)">
+            <summary>
+            Clears the votes.
+            </summary>
+            <param name="gameId">The game identifier.</param>
+            <param name="value">The value.</param>
+            <returns></returns>
         </member>
         <member name="M:Webservice.Controllers.GameController.changeVote(System.String,System.String,Webservice.DTOs.VoteUserIdDTO)">
             <summary>
