@@ -64,9 +64,7 @@ namespace Webservice.Controllers
                 return new
                 {
                     success = true,
-                    title = Database.GetDescriptionTitle(gameId),
-                    description = Database.GetDescription(gameId),
-                    votes = Database.GetCurrentVotes(gameId).ToArray()
+                    host = Database.GetHost(gameId)
                 };
             }
             catch (Exception e)
@@ -98,17 +96,57 @@ namespace Webservice.Controllers
         }
 
         /// <summary>
+        /// Gets the current title.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <returns>The game's title.</returns>
+        [Route("{gameId}/title")]
+        [HttpGet]
+        public dynamic getTitle(string gameId)
+        {
+            try
+            {
+                return new { success = true, title = Database.GetTitle(gameId) };
+            }
+            catch (Exception e)
+            {
+                return new { success = false, message = e.Message };
+            }
+        }
+
+        /// <summary>
+        /// Updates the game's title.
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="value">New title.</param>
+        /// <returns>Success.</returns>
+        [Route("{gameId}/title")]
+        [HttpPut]
+        public dynamic updateTitle(string gameId, [FromBody]TitleDTO value)
+        {
+            try
+            {
+                Database.UpdateTitle(gameId, value.title);
+                return new { success = true };
+            }
+            catch (Exception e)
+            {
+                return new { success = false, message = e.Message };
+            }
+        }
+
+        /// <summary>
         /// Gets the current description
         /// </summary>
         /// <param name="gameId">The gameId.</param>
-        /// <returns>The game's title and description.</returns>
+        /// <returns>The game's description.</returns>
         [Route("{gameId}/description")]
         [HttpGet]
         public dynamic getDescription(string gameId)
         {
             try
             {
-                return new { success = true, title = Database.GetDescriptionTitle(gameId), description = Database.GetDescription(gameId) };
+                return new { success = true, description = Database.GetDescription(gameId) };
             }
             catch (Exception e)
             {
@@ -124,11 +162,11 @@ namespace Webservice.Controllers
         /// <returns>Success.</returns>
         [Route("{gameId}/description")]
         [HttpPut]
-        public dynamic updateDescription(string gameId, [FromBody]DescriptionUserIdDTO value)
+        public dynamic updateDescription(string gameId, [FromBody]DescriptionDTO value)
         {
             try
             {
-                Database.UpdateDescription(gameId, value.title, value.description);
+                Database.UpdateDescription(gameId, value.description);
                 return new { success = true };
             }
             catch (Exception e)
@@ -138,37 +176,54 @@ namespace Webservice.Controllers
         }
 
         /// <summary>
-        /// Clears the game's description.
+        /// Gets the users.
         /// </summary>
-        /// <param name="gameId">The gameId.</param>
-        /// <returns>Success.</returns>
-        [Route("{gameId}/description")]
-        [HttpDelete]
-        public dynamic clearDescription(string gameId)
-        {
-            try
-            {
-                Database.ClearDescription(gameId);
-                return new { success = true };
-            }
-            catch (Exception e)
-            {
-                return new { success = false, message = e.Message };
-            }
-        }
-
-        /// <summary>
-        /// Gets the game's current votes.
-        /// </summary>
-        /// <param name="gameId">The gameId.</param>
-        /// <returns>The votes.</returns>
-        [Route("{gameId}/vote")]
+        /// <param name="gameId">The game identifier.</param>
+        /// <returns></returns>
+        [Route("{gameId}/user")]
         [HttpGet]
-        public dynamic getVotes(string gameId)
+        public dynamic getUsers(string gameId)
         {
             try
             {
-                return new { success = true, votes = Database.GetCurrentVotes(gameId).ToArray() };
+                var users = Database.GetUsers(gameId).ToArray();
+                if (!hasEveryoneVoted(users))
+                {
+                    foreach (var user in users)
+                        user.Vote = null;
+                }
+                return new { success = true, users = convertUser(users) };
+            }
+            catch (Exception e)
+            {
+                return new { success = false, message = e.Message };
+            }
+        }
+
+        private static bool hasEveryoneVoted(IEnumerable<User> users)
+        {
+            foreach (var user in users)
+                if (user.Voted == false)
+                    return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Kicks a user from the game.
+        /// (Only host can kick users.)
+        /// </summary>
+        /// <param name="gameId">The gameId.</param>
+        /// <param name="username">The userId of the kickee.</param>
+        /// <param name="value">The userId of the kicker.</param>
+        /// <returns>Success.</returns>
+        [Route("{gameId}/user/{username}")]
+        [HttpDelete]
+        public dynamic kickUser(string gameId, string username, [FromBody]UserIdDTO value)
+        {
+            try
+            {
+                Database.DeleteUser(gameId, username, value.userId);
+                return new { success = true };
             }
             catch (Exception e)
             {
@@ -177,14 +232,13 @@ namespace Webservice.Controllers
         }
 
         /// <summary>
-        /// Clears the game's current votes.
-        /// (Only the host can clear votes.)
+        /// Clears the votes.
         /// </summary>
-        /// <param name="gameId">The gameId.</param>
-        /// <param name="value">The userId.</param>
-        /// <returns>Success.</returns>
-        [Route("{gameId}/vote")]
-        [HttpDelete]
+        /// <param name="gameId">The game identifier.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        [Route("{gameId}/user")]
+        [HttpPut]
         public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
         {
             try
@@ -202,16 +256,16 @@ namespace Webservice.Controllers
         /// User casts vote to the game.
         /// </summary>
         /// <param name="gameId">The gameId.</param>
-        /// <param name="userId">The userId.</param>
+        /// <param name="username">The userId.</param>
         /// <param name="value">The vote.</param>
         /// <returns>Success.</returns>
-        [Route("{gameId}/vote/{userId}")]
-        [HttpPost]
-        public dynamic addVote(string gameId, string userId, [FromBody]VoteDTO value)
+        [Route("{gameId}/user/{username}")]
+        [HttpPut]
+        public dynamic changeVote(string gameId, string username, [FromBody]VoteUserIdDTO value)
         {
             try
             {
-                Database.Vote(gameId, userId, value.vote);
+                Database.Vote(gameId, value.userId, value.vote, username);
                 return new { success = true };
             }
             catch (Exception e)
@@ -220,28 +274,10 @@ namespace Webservice.Controllers
             }
         }
 
-        /// <summary>
-        /// Kicks a user from the game.
-        /// (Only host can kick users.)
-        /// </summary>
-        /// <param name="gameId">The gameId.</param>
-        /// <param name="username">The userId of the kickee.</param>
-        /// <param name="value">The userId of the kicker.</param>
-        /// <returns>Success.</returns>
-        [Route("{gameId}/user/{username}")]
-        [HttpDelete]
-        public dynamic kickUser(string gameId, string username, [FromBody]UserIdDTO value)
+        private IEnumerable<PublicUser> convertUser(IEnumerable<User> users)
         {
-            try
-            {
-                throw new NotImplementedException("Not sure Bruno is done with this. - Mikael");
-                Database.DeleteUser(gameId, username, value.userId);
-                return new { success = true };
-            }
-            catch (Exception e)
-            {
-                return new { success = false, message = e.Message };
-            }
+            foreach (var user in users)
+                yield return new PublicUser(user.Name, user.Vote, user.Voted);
         }
 
         private String getMD5(String input)

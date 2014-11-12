@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
 
 namespace Webservice.DTOs
 {
-    public class DescriptionDTO
+    public class TitleDTO
     {
-        public String description { get; set; }
+        public string title { get; set; }
     }
 }

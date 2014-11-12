@@ -13,7 +13,7 @@ namespace Webservice.Controllers
     [RoutePrefix("version")]
     public class VersionController : ApiController
     {
-        private const int VERSION_NUMBER = 1;
+        private const int VERSION_NUMBER = 2;
 
         /// <summary>
         /// Gets the latest version number

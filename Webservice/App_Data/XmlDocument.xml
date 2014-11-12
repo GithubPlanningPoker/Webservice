@@ -508,14 +508,29 @@
             <param name="value">The username.</param>
             <returns></returns>
         </member>
+        <member name="M:Webservice.Controllers.GameController.getTitle(System.String)">
+            <summary>
+            Gets the current title.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <returns>The game's title.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.updateTitle(System.String,Webservice.DTOs.TitleDTO)">
+            <summary>
+            Updates the game's title.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="value">New title.</param>
+            <returns>Success.</returns>
+        </member>
         <member name="M:Webservice.Controllers.GameController.getDescription(System.String)">
             <summary>
             Gets the current description
             </summary>
             <param name="gameId">The gameId.</param>
-            <returns>The game's title and description.</returns>
+            <returns>The game's description.</returns>
         </member>
-        <member name="M:Webservice.Controllers.GameController.updateDescription(System.String,Webservice.DTOs.DescriptionUserIdDTO)">
+        <member name="M:Webservice.Controllers.GameController.updateDescription(System.String,Webservice.DTOs.DescriptionDTO)">
             <summary>
             Updates the game's description.
             </summary>
@@ -523,37 +538,12 @@
             <param name="value">New title and/or description.</param>
             <returns>Success.</returns>
         </member>
-        <member name="M:Webservice.Controllers.GameController.clearDescription(System.String)">
+        <member name="M:Webservice.Controllers.GameController.getUsers(System.String)">
             <summary>
-            Clears the game's description.
+            Gets the users.
             </summary>
-            <param name="gameId">The gameId.</param>
-            <returns>Success.</returns>
-        </member>
-        <member name="M:Webservice.Controllers.GameController.getVotes(System.String)">
-            <summary>
-            Gets the game's current votes.
-            </summary>
-            <param name="gameId">The gameId.</param>
-            <returns>The votes.</returns>
-        </member>
-        <member name="M:Webservice.Controllers.GameController.clearVotes(System.String,Webservice.DTOs.UserIdDTO)">
-            <summary>
-            Clears the game's current votes.
-            (Only the host can clear votes.)
-            </summary>
-            <param name="gameId">The gameId.</param>
-            <param name="value">The userId.</param>
-            <returns>Success.</returns>
-        </member>
-        <member name="M:Webservice.Controllers.GameController.addVote(System.String,System.String,Webservice.DTOs.VoteDTO)">
-            <summary>
-            User casts vote to the game.
-            </summary>
-            <param name="gameId">The gameId.</param>
-            <param name="userId">The userId.</param>
-            <param name="value">The vote.</param>
-            <returns>Success.</returns>
+            <param name="gameId">The game identifier.</param>
+            <returns></returns>
         </member>
         <member name="M:Webservice.Controllers.GameController.kickUser(System.String,System.String,Webservice.DTOs.UserIdDTO)">
             <summary>
@@ -563,6 +553,23 @@
             <param name="gameId">The gameId.</param>
             <param name="username">The userId of the kickee.</param>
             <param name="value">The userId of the kicker.</param>
+            <returns>Success.</returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.clearVotes(System.String,Webservice.DTOs.UserIdDTO)">
+            <summary>
+            Clears the votes.
+            </summary>
+            <param name="gameId">The game identifier.</param>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Webservice.Controllers.GameController.changeVote(System.String,System.String,Webservice.DTOs.VoteUserIdDTO)">
+            <summary>
+            User casts vote to the game.
+            </summary>
+            <param name="gameId">The gameId.</param>
+            <param name="username">The userId.</param>
+            <param name="value">The vote.</param>
             <returns>Success.</returns>
         </member>
         <member name="T:Webservice.Controllers.VersionController">

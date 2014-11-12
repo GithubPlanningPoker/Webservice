@@ -44,24 +44,27 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void UpdateDescription(string gameId, string title, string description)
+        public static void UpdateTitle(string gameId, string title)
         {
             if (title == null)
                 title = "";
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + GetDescription(gameId);
+            save(filePath, lines);
+        }
+
+        public static void UpdateDescription(string gameId, string description)
+        {
             if (description == null)
                 description = "";
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
+            lines[DESCRIPTION] = GetTitle(gameId) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
             save(filePath, lines);
         }
 
-        public static void ClearDescription(string gameId)
-        {
-            UpdateDescription(gameId, "" ,"");
-        }
-
-        public static string GetDescriptionTitle(string gameId)
+        public static string GetTitle(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -79,10 +82,11 @@ namespace Webservice.Models
             return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE,"\n");
         }
 
-        public static void Vote(string gameId, string userId, string vote)
+        public static void Vote(string gameId, string userId, string vote, string username)
         {
             if (!validVote(vote))
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ?, break ." + " Parameter given: " + vote);
+            validUser(gameId, username, userId);
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
@@ -100,7 +104,7 @@ namespace Webservice.Models
             }
             lines[2] = string.Join(USER_SEPARATOR, users);
             save(filePath, lines);
-        }
+        }        
 
         public static void ClearVotes(string gameId, string userId)
         {
@@ -131,27 +135,54 @@ namespace Webservice.Models
             }
         }
 
-        private static void isHost(string[] users, string userId)
-        {
-            if (users[0].Split(VALUE_SEPARATOR)[0] == userId)
-                return;
-            else
-                throw new ArgumentException("The user id given must be the host to clear votes.");
-        }
-
-        public static IEnumerable<object> GetCurrentVotes(string gameId)
+        public static IEnumerable<User> GetUsers(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             foreach (string entry in lines[USER_INFO].Split(USER_SEPARATOR))
             {
                 string[] values = entry.Split(VALUE_SEPARATOR);
+                string id = values[0];
                 string name = values[1];
                 string vote = values[2];
+                bool voted = true;
                 if (vote == "null")
+                {
                     vote = null;
-                yield return new { name, vote };
+                    voted = false;
+                }
+                yield return new User(id, name, vote, voted);
             }
+        }
+
+        public static bool GameExists(string gameId)
+        {
+            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
+        }
+
+        internal static string GetHost(string gameId)
+        {
+            string filePath = getFilePath(gameId);
+            string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            return users[0].Split(VALUE_SEPARATOR)[1];
+        }
+
+        private static void validUser(string gameId, string username, string userId)
+        {
+            var users = GetUsers(gameId).Where(u => u.Name == username);
+            if (users.Count() != 1)
+                throw new ArgumentException("The username does not exist. The username given: " + username);
+            if (users.Where(u => u.UserId == userId).Count() != 1)
+                throw new ArgumentException("The user id is wrong.");
+        }
+
+        private static void isHost(string[] users, string userId)
+        {
+            if (users[0].Split(VALUE_SEPARATOR)[0] == userId)
+                return;
+            else
+                throw new ArgumentException("The user id given must be the host to clear votes.");
         }
 
         private static bool validVote(string vote)
@@ -196,11 +227,6 @@ namespace Webservice.Models
                 return filePath;
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
-        }
-
-        public static bool GameExists(string gameId)
-        {
-            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
         }
     }
 
