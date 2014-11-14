@@ -16,7 +16,7 @@ namespace Webservice.Maintenance
         /// <param name="hours">The hours for how long to keep a file since it was last modified before it gets deleted.</param>
         public static void DeleteFiles(int hours)
         {
-            var files = Directory.GetFiles(PATH, "*.txt");
+            var files = Directory.GetFiles(PATH, "*.ghpp");
             foreach (var f in files)
             {
                 if (File.GetLastWriteTime(Path.Combine(PATH, f)) < DateTime.Now.AddHours(-hours))

@@ -22,7 +22,7 @@ namespace Webservice.Models
 
         public static void CreateGame(string gameId, string hostId, string username)
         {
-            StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".txt"), true);
+            StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".ghpp"), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
             swGames.WriteLine(hostId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote);
