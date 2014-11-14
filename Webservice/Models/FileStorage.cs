@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Webservice.Models
 {
-    public static class Database
+    public class FileStorage : DatabaseConnectionInterface
     {
         private static int DESCRIPTION = 1;
         private static int USER_INFO = 2;
@@ -22,7 +22,7 @@ namespace Webservice.Models
 
         private const string FILE_EXTENSION = ".ghpp";
 
-        public static void CreateGame(string gameId, string hostId, string username)
+        public void CreateGame(string gameId, string hostId, string username)
         {
             StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + FILE_EXTENSION), true);
             swGames.WriteLine(hostId);
@@ -31,7 +31,7 @@ namespace Webservice.Models
             swGames.Close();
         }
 
-        public static void AddUser(string gameId, string userId, string username)
+        public void AddUser(string gameId, string userId, string username)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -46,7 +46,7 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void UpdateTitle(string gameId, string title)
+        public void UpdateTitle(string gameId, string title)
         {
             if (title == null)
                 title = "";
@@ -56,7 +56,7 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void UpdateDescription(string gameId, string description)
+        public void UpdateDescription(string gameId, string description)
         {
             if (description == null)
                 description = "";
@@ -66,16 +66,16 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static string GetTitle(string gameId)
+        public string GetTitle(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
             if (lines[DESCRIPTION] == "")
                 return "";
-            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE,"\r\n");
+            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE, "\r\n");
         }
 
-        public static string GetDescription(string gameId)
+        public string GetDescription(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -84,7 +84,7 @@ namespace Webservice.Models
             return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE, "\r\n");
         }
 
-        public static void Vote(string gameId, string userId, string vote, string username)
+        public void Vote(string gameId, string userId, string vote, string username)
         {
             if (!validVote(vote))
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ?, break ." + " Parameter given: " + vote);
@@ -106,9 +106,9 @@ namespace Webservice.Models
             }
             lines[2] = string.Join(USER_SEPARATOR, users);
             save(filePath, lines);
-        }        
+        }
 
-        public static void ClearVotes(string gameId, string userId)
+        public void ClearVotes(string gameId, string userId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -124,7 +124,7 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public static void DeleteUser(string gameId, string username, string userId)
+        public void DeleteUser(string gameId, string username, string userId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -137,7 +137,7 @@ namespace Webservice.Models
             }
         }
 
-        public static IEnumerable<User> GetUsers(string gameId)
+        public IEnumerable<User> GetUsers(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -157,12 +157,12 @@ namespace Webservice.Models
             }
         }
 
-        public static bool GameExists(string gameId)
+        public bool GameExists(string gameId)
         {
             return File.Exists(Path.Combine(PATH, gameId + FILE_EXTENSION));
         }
 
-        internal static string GetHost(string gameId)
+        public string GetHost(string gameId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
@@ -170,7 +170,7 @@ namespace Webservice.Models
             return users[0].Split(VALUE_SEPARATOR)[1];
         }
 
-        private static void validUser(string gameId, string username, string userId)
+        private void validUser(string gameId, string username, string userId)
         {
             var users = GetUsers(gameId).Where(u => u.Name == username);
             if (users.Count() != 1)
@@ -179,7 +179,7 @@ namespace Webservice.Models
                 throw new ArgumentException("The user id is wrong.");
         }
 
-        private static void isHost(string[] users, string userId)
+        private void isHost(string[] users, string userId)
         {
             if (users[0].Split(VALUE_SEPARATOR)[0] == userId)
                 return;
@@ -187,7 +187,7 @@ namespace Webservice.Models
                 throw new ArgumentException("The user id given must be the host to clear votes.");
         }
 
-        private static bool validVote(string vote)
+        private bool validVote(string vote)
         {
             switch (vote)
             {
@@ -212,7 +212,7 @@ namespace Webservice.Models
             }
         }
 
-        private static void save(string filePath, string[] lines)
+        private void save(string filePath, string[] lines)
         {
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
@@ -222,7 +222,7 @@ namespace Webservice.Models
             }
         }
 
-        private static string getFilePath(string gameId)
+        private string getFilePath(string gameId)
         {
             string filePath = Path.Combine(PATH, gameId + FILE_EXTENSION);
             if (File.Exists(filePath))
@@ -230,6 +230,8 @@ namespace Webservice.Models
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
         }
+
+
     }
 
     public static class StringSplitter

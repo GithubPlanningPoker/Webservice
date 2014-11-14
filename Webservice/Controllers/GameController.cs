@@ -18,6 +18,13 @@ namespace Webservice.Controllers
     [RoutePrefix("game")]
     public class GameController : ApiController
     {
+        private static Dictionary<string, Game> games = new Dictionary<string, Game>();
+        DatabaseConnectionInterface Database;
+
+        public GameController()
+        {
+            Database = new FileStorage();
+        }
         /// <summary>
         /// Create a new game, with the provided username as host.
         /// </summary>
