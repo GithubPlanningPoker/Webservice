@@ -20,9 +20,11 @@ namespace Webservice.Models
         private static string DESCRIPTION_SEPARATOR = "*********";
         private static string NEWLINE = "^*^*";
 
+        private const string FILE_EXTENSION = ".ghpp";
+
         public static void CreateGame(string gameId, string hostId, string username)
         {
-            StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + ".ghpp"), true);
+            StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + FILE_EXTENSION), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();
             swGames.WriteLine(hostId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote);
@@ -50,7 +52,7 @@ namespace Webservice.Models
                 title = "";
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = title.Replace("\n", NEWLINE) + DESCRIPTION_SEPARATOR + GetDescription(gameId);
+            lines[DESCRIPTION] = title.Replace("\r\n", NEWLINE) + DESCRIPTION_SEPARATOR + GetDescription(gameId);
             save(filePath, lines);
         }
 
@@ -60,7 +62,7 @@ namespace Webservice.Models
                 description = "";
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = GetTitle(gameId) + DESCRIPTION_SEPARATOR + description.Replace("\n", NEWLINE);
+            lines[DESCRIPTION] = GetTitle(gameId) + DESCRIPTION_SEPARATOR + description.Replace("\r\n", NEWLINE);
             save(filePath, lines);
         }
 
@@ -70,7 +72,7 @@ namespace Webservice.Models
             string[] lines = File.ReadAllLines(filePath);
             if (lines[DESCRIPTION] == "")
                 return "";
-            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE,"\n");
+            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE,"\r\n");
         }
 
         public static string GetDescription(string gameId)
@@ -79,7 +81,7 @@ namespace Webservice.Models
             string[] lines = File.ReadAllLines(filePath);
             if (lines[DESCRIPTION] == "")
                 return "";
-            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE,"\n");
+            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE, "\r\n");
         }
 
         public static void Vote(string gameId, string userId, string vote, string username)
@@ -157,7 +159,7 @@ namespace Webservice.Models
 
         public static bool GameExists(string gameId)
         {
-            return File.Exists(Path.Combine(PATH, gameId + ".txt"));
+            return File.Exists(Path.Combine(PATH, gameId + FILE_EXTENSION));
         }
 
         internal static string GetHost(string gameId)
@@ -222,7 +224,7 @@ namespace Webservice.Models
 
         private static string getFilePath(string gameId)
         {
-            string filePath = Path.Combine(PATH, gameId + ".txt");
+            string filePath = Path.Combine(PATH, gameId + FILE_EXTENSION);
             if (File.Exists(filePath))
                 return filePath;
             else
