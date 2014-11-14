@@ -116,15 +116,18 @@ namespace Webservice.Controllers
         /// <returns>The game's title.</returns>
         [Route("{gameId}/title")]
         [HttpGet]
-        public dynamic getTitle(string gameId)
+        [ResponseType(typeof(GetTitleResponse))]
+        public HttpResponseMessage getTitle(string gameId)
         {
             try
             {
-                return new { success = true, title = Database.GetTitle(gameId) };
+                string title = Database.GetTitle(gameId);
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new GetTitleResponse() { title = title });
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -136,16 +139,17 @@ namespace Webservice.Controllers
         /// <returns>Success.</returns>
         [Route("{gameId}/title")]
         [HttpPut]
-        public dynamic updateTitle(string gameId, [FromBody]TitleDTO value)
+        public HttpResponseMessage updateTitle(string gameId, [FromBody]TitleDTO value)
         {
+            string title = value.title;
             try
             {
-                Database.UpdateTitle(gameId, value.title);
-                return new { success = true };
+                Database.UpdateTitle(gameId, title);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -156,15 +160,18 @@ namespace Webservice.Controllers
         /// <returns>The game's description.</returns>
         [Route("{gameId}/description")]
         [HttpGet]
-        public dynamic getDescription(string gameId)
+        [ResponseType(typeof(GetDescriptionResponse))]
+        public HttpResponseMessage getDescription(string gameId)
         {
             try
             {
-                return new { success = true, description = Database.GetDescription(gameId) };
+                string description = Database.GetDescription(gameId);
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new GetDescriptionResponse() { description = description });
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -176,16 +183,17 @@ namespace Webservice.Controllers
         /// <returns>Success.</returns>
         [Route("{gameId}/description")]
         [HttpPut]
-        public dynamic updateDescription(string gameId, [FromBody]DescriptionDTO value)
+        public HttpResponseMessage updateDescription(string gameId, [FromBody]DescriptionDTO value)
         {
+            string description = value.description;
             try
             {
-                Database.UpdateDescription(gameId, value.description);
-                return new { success = true };
+                Database.UpdateDescription(gameId, description);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
