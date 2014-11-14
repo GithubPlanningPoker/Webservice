@@ -92,18 +92,21 @@ namespace Webservice.Controllers
         /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpPost]
+        [ResponseType(typeof(UserPostResponse))]
         public dynamic joinGame(string gameId, [FromBody]NameDTO value)
         {
-            var returnval = new { success = true, userid = getMD5(value.name) };
+            string username = value.name;
+            string userId = getMD5(value.name);
             try
             {
-                Database.AddUser(gameId, returnval.userid, value.name);
+                Database.AddUser(gameId, userId, username);
+                return Request.CreateResponse(HttpStatusCode.Created,
+                    new UserPostResponse() { userId = userId });
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                return new HttpResponseException(HttpStatusCode.InternalServerError);
             }
-            return returnval;
         }
 
         /// <summary>
