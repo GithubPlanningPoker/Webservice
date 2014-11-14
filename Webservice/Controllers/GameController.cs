@@ -204,7 +204,8 @@ namespace Webservice.Controllers
         /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpGet]
-        public dynamic getUsers(string gameId)
+        [ResponseType(typeof(List<GetUserResponse>))]
+        public HttpResponseMessage getUsers(string gameId)
         {
             try
             {
@@ -214,11 +215,12 @@ namespace Webservice.Controllers
                     foreach (var user in users)
                         user.Vote = null;
                 }
-                return new { success = true, users = convertUser(users) };
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote })));
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
