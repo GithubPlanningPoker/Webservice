@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Webservice.Maintenance;
 
 namespace Webservice.Models
 {
@@ -24,6 +25,7 @@ namespace Webservice.Models
 
         public void CreateGame(string gameId, string hostId, string username)
         {
+            FileCleaner.DeleteFiles(24); //Delete files which were not modified in the past 24 hours.
             StreamWriter swGames = new StreamWriter(Path.Combine(PATH, gameId + FILE_EXTENSION), true);
             swGames.WriteLine(hostId);
             swGames.WriteLine();

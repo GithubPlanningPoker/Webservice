@@ -34,7 +34,6 @@ namespace Webservice.Controllers
         [HttpPost]
         public dynamic createGame([FromBody]NameDTO value)
         {
-            FileCleaner.DeleteFiles(24); //Delete files which were not modified in the past 24 hours.
             string gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
             while (Database.GameExists(gameIdHash))
             {
