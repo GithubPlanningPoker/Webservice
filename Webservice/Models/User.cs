@@ -7,7 +7,7 @@ namespace Webservice.Models
 {
     public class User
     {
-        public User(string userId, string name, string vote, bool voted)
+        public User(string userId, string name, string vote = "", bool voted = false)
         {
             this.userId = userId;
             this.name = name;

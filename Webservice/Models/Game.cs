@@ -5,11 +5,50 @@ using System.Text;
 
 namespace Webservice.Models
 {
-    class Game
+    public class Game
     {
-        public string Host { get; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public List<User> Users { get; set; }
+        public Game(string gameId, User host)
+        {
+            this.gameId = gameId;
+            this.host = host;
+        }
+        private string gameId;
+
+        public string GameId
+        {
+            get { return gameId; }
+        }
+
+        private User host;
+
+        public User Host
+        {
+            get { return host; }
+        }
+
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value; }
+        }
+
+        private string description;
+
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
+        }
+
+        private List<User> users;
+
+        public List<User> Users
+        {
+            get { return users; }
+            set { users = value; }
+        }
+        
     }
 }

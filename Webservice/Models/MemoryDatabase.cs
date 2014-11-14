@@ -9,14 +9,14 @@ namespace Webservice.Models
     {
         private static Dictionary<string, Game> games = new Dictionary<string, Game>();
 
-        public void CreateGame(string gameId, string hostId, string username)
+        public void CreateGame(string gameId, string userId, string username)
         {
-            //games.Add(gameId,
+            games.Add(gameId, new Game(gameId, new User(userId, username)));
         }
 
         public void AddUser(string gameId, string userId, string username)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void UpdateTitle(string gameId, string title)
@@ -67,6 +67,14 @@ namespace Webservice.Models
         public string GetHost(string gameId)
         {
             throw new NotImplementedException();
+        }
+
+        private Game getGame(string gameId)
+        {
+            if (games.ContainsKey(gameId))
+                return games[gameId];
+            else
+                throw new KeyNotFoundException("The game does not exist.");
         }
     }
 }
