@@ -6,9 +6,11 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Webservice.DTOs;
 using Webservice.Maintenance;
 using Webservice.Models;
+using Webservice.Response;
 
 namespace Webservice.Controllers
 {
@@ -32,29 +34,28 @@ namespace Webservice.Controllers
         /// <returns>The gameId and the host's userId.</returns>
         [Route("")]
         [HttpPost]
+        [ResponseType(typeof(PostGameResponse))]
         public dynamic createGame([FromBody]NameDTO value)
         {
             FileCleaner.DeleteFiles(24); //Delete files which were not modified in the past 24 hours.
-            string gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
-            while (Database.GameExists(gameIdHash))
-            {
-                gameIdHash = getMD5(DateTime.Now.Ticks.ToString());
-            }
-            var returnVal = new
-            {
-                success = true,
-                gameid = gameIdHash,
-                userid = getMD5(value.name + DateTime.Now.ToString())
-            };
+
+            string gameId = getMD5(DateTime.Now.Ticks.ToString());
+            while (Database.GameExists(gameId))
+                gameId = getMD5(DateTime.Now.Ticks.ToString());
+
+            string username = value.name;
+            string userId = getMD5(username + DateTime.Now.ToString());
+
             try
             {
-                Database.CreateGame(returnVal.gameid, returnVal.userid, value.name);
+                Database.CreateGame(gameId, userId, username);
+                return Request.CreateResponse(HttpStatusCode.Created,
+                    new PostGameResponse() { gameId = gameId, userId = userId });
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
-            return returnVal;
         }
 
         /// <summary>
@@ -64,20 +65,23 @@ namespace Webservice.Controllers
         /// <returns>The game's title, description, and votes.</returns>
         [Route("{gameId}")]
         [HttpGet]
-        public dynamic getGame(string gameId)
+        [ResponseType(typeof(GetGameResponse))]
+        public HttpResponseMessage getGame(string gameId)
         {
             try
             {
-                return new
-                {
-                    success = true,
-                    host = Database.GetHost(gameId)
-                };
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new GetGameResponse() { username = Database.GetHost(gameId) });
+            }
+            catch (ArgumentException e)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
+
         }
 
         /// <summary>
