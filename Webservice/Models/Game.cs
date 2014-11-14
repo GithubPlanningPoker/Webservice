@@ -11,6 +11,7 @@ namespace Webservice.Models
         {
             this.gameId = gameId;
             this.host = host;
+            this.users = new UserCollection();
         }
         private string gameId;
 

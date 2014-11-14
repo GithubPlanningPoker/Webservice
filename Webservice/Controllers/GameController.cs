@@ -23,7 +23,7 @@ namespace Webservice.Controllers
 
         public GameController()
         {
-            Database = new FileStorage();
+            Database = new MemoryDatabase();
         }
         /// <summary>
         /// Create a new game, with the provided username as host.

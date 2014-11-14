@@ -70,7 +70,7 @@ namespace Webservice.Models
 
         public bool GameExists(string gameId)
         {
-            return getGame(gameId) != null;
+            return games.ContainsKey(gameId);
         }
 
         public string GetHost(string gameId)
