@@ -124,7 +124,7 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public void DeleteUser(string gameId, string username, string userId)
+        public void KickUser(string gameId, string username, string userId)
         {
             string filePath = getFilePath(gameId);
             string[] lines = File.ReadAllLines(filePath);

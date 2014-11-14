@@ -16,57 +16,66 @@ namespace Webservice.Models
 
         public void AddUser(string gameId, string userId, string username)
         {
-            
+            getGame(gameId).Users.Add(new User(userId, username));
         }
 
         public void UpdateTitle(string gameId, string title)
         {
-            throw new NotImplementedException();
+            getGame(gameId).Title = title;
         }
 
         public void UpdateDescription(string gameId, string description)
         {
-            throw new NotImplementedException();
+            getGame(gameId).Description = description;
         }
 
         public string GetTitle(string gameId)
         {
-            throw new NotImplementedException();
+            return getGame(gameId).Title;
         }
 
         public string GetDescription(string gameId)
         {
-            throw new NotImplementedException();
+            return getGame(gameId).Description;
         }
 
         public void Vote(string gameId, string userId, string vote, string username)
         {
-            throw new NotImplementedException();
+            Game game = getGame(gameId);
+            if (game.Users.Contains(userId))
+                game.Users.Vote(userId, vote);
         }
 
         public void ClearVotes(string gameId, string userId)
         {
-            throw new NotImplementedException();
+            Game game = getGame(gameId);
+            if (game.IsHost(userId))
+                game.Users.ClearVotes();
         }
 
-        public void DeleteUser(string gameId, string username, string userId)
+        public void KickUser(string gameId, string username, string userId)
         {
-            throw new NotImplementedException();
+            Game game = getGame(gameId);
+            if (game.IsHost(userId))
+                game.Users.Kick(username);
         }
 
         public IEnumerable<User> GetUsers(string gameId)
         {
-            throw new NotImplementedException();
+            foreach (var user in getGame(gameId).Users)
+            {
+                yield return user;
+            }
         }
 
         public bool GameExists(string gameId)
         {
-            throw new NotImplementedException();
+            return getGame(gameId) != null;
         }
 
         public string GetHost(string gameId)
         {
-            throw new NotImplementedException();
+            return getGame(gameId).Host.Name;
         }
 
         private Game getGame(string gameId)

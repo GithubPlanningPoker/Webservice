@@ -24,7 +24,7 @@ namespace Webservice.Models
 
         void ClearVotes(string gameId, string userId);
 
-        void DeleteUser(string gameId, string username, string userId);
+        void KickUser(string gameId, string username, string userId);
 
         IEnumerable<User> GetUsers(string gameId);
 

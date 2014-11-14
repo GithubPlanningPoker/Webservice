@@ -229,7 +229,7 @@ namespace Webservice.Controllers
         {
             try
             {
-                Database.DeleteUser(gameId, username, value.userId);
+                Database.KickUser(gameId, username, value.userId);
                 return new { success = true };
             }
             catch (Exception e)
