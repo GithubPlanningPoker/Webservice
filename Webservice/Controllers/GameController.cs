@@ -242,16 +242,17 @@ namespace Webservice.Controllers
         /// <returns>Success.</returns>
         [Route("{gameId}/user/{username}")]
         [HttpDelete]
-        public dynamic kickUser(string gameId, string username, [FromBody]UserIdDTO value)
+        public HttpResponseMessage kickUser(string gameId, string username, [FromBody]UserIdDTO value)
         {
+            string userId = value.userId;
             try
             {
-                Database.DeleteUser(gameId, username, value.userId);
-                return new { success = true };
+                Database.DeleteUser(gameId, username, userId);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -263,16 +264,17 @@ namespace Webservice.Controllers
         /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpPut]
-        public dynamic clearVotes(string gameId, [FromBody]UserIdDTO value)
+        public HttpResponseMessage clearVotes(string gameId, [FromBody]UserIdDTO value)
         {
+            string userId = value.userId;
             try
             {
-                Database.ClearVotes(gameId, value.userId);
-                return new { success = true };
+                Database.ClearVotes(gameId, userId);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
@@ -285,16 +287,18 @@ namespace Webservice.Controllers
         /// <returns>Success.</returns>
         [Route("{gameId}/user/{username}")]
         [HttpPut]
-        public dynamic changeVote(string gameId, string username, [FromBody]VoteUserIdDTO value)
+        public HttpResponseMessage changeVote(string gameId, string username, [FromBody]VoteUserIdDTO value)
         {
+            string vote = value.vote;
+            string userId = value.userId;
             try
             {
-                Database.Vote(gameId, value.userId, value.vote, username);
-                return new { success = true };
+                Database.Vote(gameId, userId, vote, username);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
-                return new { success = false, message = e.Message };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
         }
 
