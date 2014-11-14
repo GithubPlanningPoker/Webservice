@@ -25,7 +25,7 @@ namespace Webservice.Controllers
 
         public GameController()
         {
-            Database = new FileStorage();
+            Database = new MemoryDatabase();
         }
         /// <summary>
         /// Create a new game, with the provided username as host.
@@ -37,7 +37,6 @@ namespace Webservice.Controllers
         [ResponseType(typeof(PostGameResponse))]
         public dynamic createGame([FromBody]NameDTO value)
         {
-            FileCleaner.DeleteFiles(24); //Delete files which were not modified in the past 24 hours.
 
             string gameId = getMD5(DateTime.Now.Ticks.ToString());
             while (Database.GameExists(gameId))
@@ -247,7 +246,7 @@ namespace Webservice.Controllers
             string userId = value.userId;
             try
             {
-                Database.DeleteUser(gameId, username, userId);
+                Database.KickUser(gameId, username, userId);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             catch (Exception e)

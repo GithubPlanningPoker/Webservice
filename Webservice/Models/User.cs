@@ -44,9 +44,7 @@ namespace Webservice.Models
         public bool Voted
         {
             get { return voted; }
+            set { voted = value; }
         }
-        
-        
-        
     }
 }
