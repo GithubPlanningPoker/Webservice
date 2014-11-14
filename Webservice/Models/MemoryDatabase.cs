@@ -11,7 +11,10 @@ namespace Webservice.Models
 
         public void CreateGame(string gameId, string userId, string username)
         {
-            games.Add(gameId, new Game(gameId, new User(userId, username)));
+            User host = new User(userId, username);
+            Game game = new Game(gameId, host);
+            game.Users.Add(host);
+            games.Add(gameId, game);
         }
 
         public void AddUser(string gameId, string userId, string username)
