@@ -232,8 +232,6 @@ namespace Webservice.Models
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
         }
-
-
     }
 
     public static class StringSplitter

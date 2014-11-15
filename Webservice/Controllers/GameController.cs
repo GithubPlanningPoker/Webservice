@@ -305,6 +305,11 @@ namespace Webservice.Controllers
                 Database.Vote(gameId, userId, vote, username);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
+            catch (InvalidOperationException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Conflict,
+                    e.Message);
+            }
             catch (Exception e)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,

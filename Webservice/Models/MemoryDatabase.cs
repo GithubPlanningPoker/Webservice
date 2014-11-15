@@ -44,6 +44,8 @@ namespace Webservice.Models
 
         public void Vote(string gameId, string userId, string vote, string username)
         {
+            if (hasVoted(gameId, userId))
+                throw new InvalidOperationException("User " + username + " has already voted.");
             Game game = getGame(gameId);
             if (game.Users.Contains(userId))
                 game.Users.Vote(userId, vote);
@@ -79,6 +81,11 @@ namespace Webservice.Models
         public string GetHost(string gameId)
         {
             return getGame(gameId).Host.Name;
+        }
+
+        private bool hasVoted(string gameId, string userId)
+        {
+            return getGame(gameId).Users.GetUser(userId).Voted;
         }
 
         private Game getGame(string gameId)

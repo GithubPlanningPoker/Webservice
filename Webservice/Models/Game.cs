@@ -79,7 +79,7 @@ namespace Webservice.Models
             public void Remove(string userId)
             {
                 if (Contains(userId))
-                    users.Remove(getUser(userId));
+                    users.Remove(GetUser(userId));
             }
 
             public void Kick(string username)
@@ -94,7 +94,7 @@ namespace Webservice.Models
                 throw new ArgumentException("The user: " + username + " does not exisst.");
             }
 
-            private User getUser(string userId)
+            public User GetUser(string userId)
             {
                 if (Contains(userId))
                 {
@@ -111,7 +111,7 @@ namespace Webservice.Models
 
             public void Vote(string userId, string vote)
             {
-                User user = getUser(userId);
+                User user = GetUser(userId);
                 user.Vote = vote;
                 user.Voted = true;
             }
