@@ -111,12 +111,9 @@ namespace Webservice.Models
 
             public void Vote(string userId, string vote)
             {
-                if (Contains(userId))
-                {
-                    User user = getUser(userId);
-                    user.Vote = vote;
-                    user.Voted = true;
-                }
+                User user = getUser(userId);
+                user.Vote = vote;
+                user.Voted = true;
             }
 
             public void ClearVotes()
@@ -143,6 +140,6 @@ namespace Webservice.Models
                 return users.GetEnumerator();
             }
         }
-        
+
     }
 }
