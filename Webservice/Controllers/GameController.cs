@@ -218,12 +218,11 @@ namespace Webservice.Controllers
             {
                 var users = Database.GetUsers(gameId).ToArray();
                 if (!hasEveryoneVoted(users))
-                {
-                    foreach (var user in users)
-                        user.Vote = null;
-                }
-                return Request.CreateResponse(HttpStatusCode.OK,
-                    new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote }))});
+                    return Request.CreateResponse(HttpStatusCode.OK,
+                        new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = null })) });
+                else
+                    return Request.CreateResponse(HttpStatusCode.OK,
+                        new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote })) });
             }
             catch (Exception e)
             {
