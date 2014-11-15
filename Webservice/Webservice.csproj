@@ -161,6 +161,7 @@
     <Compile Include="Response\GetDescriptionResponse.cs" />
     <Compile Include="Response\GetTitleResponse.cs" />
     <Compile Include="Response\GetUserResponse.cs" />
+    <Compile Include="Response\GetUsersResponse.cs" />
     <Compile Include="Response\PostGameResponse.cs" />
     <Compile Include="Response\GetGameResponse.cs" />
     <Compile Include="Response\UserPostResponse.cs" />

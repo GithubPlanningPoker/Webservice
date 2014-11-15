@@ -203,7 +203,7 @@ namespace Webservice.Controllers
         /// <returns></returns>
         [Route("{gameId}/user")]
         [HttpGet]
-        [ResponseType(typeof(List<GetUserResponse>))]
+        [ResponseType(typeof(GetUsersResponse))]
         public HttpResponseMessage getUsers(string gameId)
         {
             try
@@ -215,7 +215,7 @@ namespace Webservice.Controllers
                         user.Vote = null;
                 }
                 return Request.CreateResponse(HttpStatusCode.OK,
-                    new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote })));
+                    new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote }))});
             }
             catch (Exception e)
             {
