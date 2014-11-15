@@ -53,7 +53,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -74,11 +75,13 @@ namespace Webservice.Controllers
             }
             catch (ArgumentException e)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                    e.Message);
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
 
         }
@@ -104,7 +107,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                return new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -126,7 +130,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -148,7 +153,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -170,7 +176,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -192,7 +199,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -219,7 +227,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -251,7 +260,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -273,7 +283,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
@@ -297,7 +308,8 @@ namespace Webservice.Controllers
             }
             catch (Exception e)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
+                    e.Message);
             }
         }
 
