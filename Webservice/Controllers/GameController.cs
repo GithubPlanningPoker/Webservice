@@ -35,14 +35,14 @@ namespace Webservice.Controllers
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(PostGameResponse))]
-        public dynamic createGame([FromBody]NameDTO value)
+        public dynamic createGame([FromBody]UsernameDTO value)
         {
 
             string gameId = getMD5(DateTime.Now.Ticks.ToString());
             while (Database.GameExists(gameId))
                 gameId = getMD5(DateTime.Now.Ticks.ToString());
 
-            string username = value.name;
+            string username = value.username;
             string userId = getMD5(username + DateTime.Now.ToString());
 
             try
@@ -92,10 +92,10 @@ namespace Webservice.Controllers
         [Route("{gameId}/user")]
         [HttpPost]
         [ResponseType(typeof(UserPostResponse))]
-        public dynamic joinGame(string gameId, [FromBody]NameDTO value)
+        public dynamic joinGame(string gameId, [FromBody]UsernameDTO value)
         {
-            string username = value.name;
-            string userId = getMD5(value.name);
+            string username = value.username;
+            string userId = getMD5(value.username);
             try
             {
                 Database.AddUser(gameId, userId, username);

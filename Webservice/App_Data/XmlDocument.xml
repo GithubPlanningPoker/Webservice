@@ -486,7 +486,7 @@
             A Planning Poker game.
             </summary>
         </member>
-        <member name="M:Webservice.Controllers.GameController.createGame(Webservice.DTOs.NameDTO)">
+        <member name="M:Webservice.Controllers.GameController.createGame(Webservice.DTOs.UsernameDTO)">
             <summary>
             Create a new game, with the provided username as host.
             </summary>
@@ -500,7 +500,7 @@
             <param name="gameId">The gameId.</param>
             <returns>The game's title, description, and votes.</returns>
         </member>
-        <member name="M:Webservice.Controllers.GameController.joinGame(System.String,Webservice.DTOs.NameDTO)">
+        <member name="M:Webservice.Controllers.GameController.joinGame(System.String,Webservice.DTOs.UsernameDTO)">
             <summary>
             Join a game with the provided username.
             </summary>

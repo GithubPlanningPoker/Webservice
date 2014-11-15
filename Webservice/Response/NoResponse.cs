@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Webservice.DTOs
+namespace Webservice.Response
 {
-    public class UsernameDTO
+    public class NoResponse
     {
-        public String username { get; set; }
+        public NoResponse() { }
     }
 }
