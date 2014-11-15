@@ -84,13 +84,13 @@ namespace Webservice.Models
 
             public void Kick(string username)
             {
-                foreach (var user in users)
-                {
-                    if (user.Name == username)
+                for (int i = 0; i < users.Count; i++)
+                    if (users[i].Name == username)
                     {
-                        Remove(user);
+                        Remove(users[i]);
+                        return;
                     }
-                }
+
                 throw new ArgumentException("The user: " + username + " does not exisst.");
             }
 
