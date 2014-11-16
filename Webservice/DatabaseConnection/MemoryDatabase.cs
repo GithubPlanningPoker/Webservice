@@ -17,60 +17,33 @@ namespace Webservice.Models
             games.Add(gameId, game);
         }
 
-        public void AddUser(string gameId, string userId, string username)
+        public void AddUser(Game game, string userId, string username)
         {
-            getGame(gameId).Users.Add(new User(userId, username));
+            game.Users.Add(new User(userId, username));
         }
 
-        public void UpdateTitle(string gameId, string title)
+        public void UpdateTitle(Game game, string title)
         {
-            getGame(gameId).Title = title;
+            game.Title = title;
         }
 
-        public void UpdateDescription(string gameId, string description)
+        public void UpdateDescription(Game game, string description)
         {
-            getGame(gameId).Description = description;
+            game.Description = description;
+        }
+        public void Vote(Game game, string userId, string vote)
+        {
+            game.Users.Vote(userId, vote);
         }
 
-        public string GetTitle(string gameId)
+        public void ClearVotes(Game game, string userId)
         {
-            return getGame(gameId).Title;
+            game.Users.ClearVotes();
         }
 
-        public string GetDescription(string gameId)
+        public void KickUser(Game game, string username, string userId)
         {
-            return getGame(gameId).Description;
-        }
-
-        public void Vote(string gameId, string userId, string vote, string username)
-        {
-            if (hasVoted(gameId, userId))
-                throw new InvalidOperationException("User " + username + " has already voted.");
-            Game game = getGame(gameId);
-            if (game.Users.Contains(userId))
-                game.Users.Vote(userId, vote);
-        }
-
-        public void ClearVotes(string gameId, string userId)
-        {
-            Game game = getGame(gameId);
-            if (game.IsHost(userId))
-                game.Users.ClearVotes();
-        }
-
-        public void KickUser(string gameId, string username, string userId)
-        {
-            Game game = getGame(gameId);
-            if (game.IsHost(userId))
-                game.Users.Kick(username);
-        }
-
-        public IEnumerable<User> GetUsers(string gameId)
-        {
-            foreach (var user in getGame(gameId).Users)
-            {
-                yield return user;
-            }
+            game.Users.Kick(username);
         }
 
         public bool GameExists(string gameId)
@@ -78,22 +51,12 @@ namespace Webservice.Models
             return games.ContainsKey(gameId);
         }
 
-        public string GetHost(string gameId)
-        {
-            return getGame(gameId).Host.Name;
-        }
-
-        private bool hasVoted(string gameId, string userId)
-        {
-            return getGame(gameId).Users.GetUser(userId).Voted;
-        }
-
-        private Game getGame(string gameId)
+        public Game GetGame(string gameId)
         {
             if (games.ContainsKey(gameId))
                 return games[gameId];
             else
-                throw new KeyNotFoundException("The game does not exist.");
+                 throw new KeyNotFoundException("Game not found");
         }
     }
 }
