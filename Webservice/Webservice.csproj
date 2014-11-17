@@ -155,7 +155,6 @@
     <Compile Include="Models\DatabaseConnectionInterface.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\MemoryDatabase.cs" />
-    <Compile Include="Models\PublicUser.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Response\GetDescriptionResponse.cs" />

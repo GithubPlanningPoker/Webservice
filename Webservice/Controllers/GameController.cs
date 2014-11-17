@@ -317,12 +317,6 @@ namespace Webservice.Controllers
             }
         }
 
-        private IEnumerable<PublicUser> convertUser(IEnumerable<User> users)
-        {
-            foreach (var user in users)
-                yield return new PublicUser(user.Name, user.Vote, user.Voted);
-        }
-
         private String getMD5(String input)
         {
             MD5 md5Hash = MD5.Create();
