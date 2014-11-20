@@ -33,66 +33,25 @@ namespace Webservice.Models
             swGames.Close();
         }
 
-        public void AddUser(string gameId, string userId, string username)
-        {
-            string filePath = getFilePath(gameId);
-            string[] lines = File.ReadAllLines(filePath);
-            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
-            for (int i = 0; i < users.Length; i++)
-            {
-                string[] values = users[i].Split(VALUE_SEPARATOR);
-                if (username == values[1])
-                    throw new ArgumentException("Username already exists.");
-            }
-            lines[USER_INFO] += USER_SEPARATOR + userId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote;
-            save(filePath, lines);
-        }
 
-        public void UpdateTitle(string gameId, string title)
-        {
-            if (title == null)
-                title = "";
-            string filePath = getFilePath(gameId);
-            string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = title.Replace("\r\n", NEWLINE) + DESCRIPTION_SEPARATOR + GetDescription(gameId);
-            save(filePath, lines);
-        }
-
-        public void UpdateDescription(string gameId, string description)
+        public void UpdateDescription(Game game, string description)
         {
             if (description == null)
                 description = "";
-            string filePath = getFilePath(gameId);
+            string filePath = getFilePath(game.GameId);
             string[] lines = File.ReadAllLines(filePath);
-            lines[DESCRIPTION] = GetTitle(gameId) + DESCRIPTION_SEPARATOR + description.Replace("\r\n", NEWLINE);
+            lines[DESCRIPTION] = game.Title + DESCRIPTION_SEPARATOR + description.Replace("\r\n", NEWLINE);
             save(filePath, lines);
         }
 
-        public string GetTitle(string gameId)
-        {
-            string filePath = getFilePath(gameId);
-            string[] lines = File.ReadAllLines(filePath);
-            if (lines[DESCRIPTION] == "")
-                return "";
-            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[0].Replace(NEWLINE, "\r\n");
-        }
-
-        public string GetDescription(string gameId)
-        {
-            string filePath = getFilePath(gameId);
-            string[] lines = File.ReadAllLines(filePath);
-            if (lines[DESCRIPTION] == "")
-                return "";
-            return lines[DESCRIPTION].Split(DESCRIPTION_SEPARATOR)[1].Replace(NEWLINE, "\r\n");
-        }
-
-        public void Vote(string gameId, string userId, string vote, string username)
+        public void Vote(Game game, string userId, string vote, string username)
         {
             if (!validVote(vote))
                 throw new ArgumentException("Vote is expected to be one of the following values: 0, half, 1, 2, 3, 5, 8, 13, 20, 40, 100, inf, ?, break ." + " Parameter given: " + vote);
-            validUser(gameId, username, userId);
-            string filePath = getFilePath(gameId);
+            validUser(game.GameId, username, userId);
+            string filePath = getFilePath(game.GameId);
             string[] lines = File.ReadAllLines(filePath);
+            
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
             for (int i = 0; i < users.Length; i++)
             {
@@ -110,10 +69,11 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public void ClearVotes(string gameId, string userId)
+        public void ClearVotes(Game game, string userId)
         {
-            string filePath = getFilePath(gameId);
+            string filePath = getFilePath(game.GameId);
             string[] lines = File.ReadAllLines(filePath);
+
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
             isHost(users, userId);
             for (int i = 0; i < users.Length; i++)
@@ -126,10 +86,11 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public void KickUser(string gameId, string username, string userId)
+        public void KickUser(Game game, string username, string userId)
         {
-            string filePath = getFilePath(gameId);
+            string filePath = getFilePath(game.GameId);
             string[] lines = File.ReadAllLines(filePath);
+
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
             isHost(users, userId);
             for (int i = 0; i < users.Length; i++)
@@ -137,6 +98,8 @@ namespace Webservice.Models
                 if (users[i].Split(VALUE_SEPARATOR)[1] == username)
                     users[i] = "";
             }
+
+            save(filePath, lines);
         }
 
         public IEnumerable<User> GetUsers(string gameId)
@@ -214,9 +177,9 @@ namespace Webservice.Models
             }
         }
 
-        private void save(string filePath, string[] lines)
+        private void save(string filename, string[] lines)
         {
-            using (StreamWriter writer = new StreamWriter(filePath, false))
+            using (StreamWriter writer = new StreamWriter(filename, false))
             {
                 foreach (String l in lines)
                     writer.WriteLine(l);
@@ -231,6 +194,40 @@ namespace Webservice.Models
                 return filePath;
             else
                 throw new ArgumentException("Game: " + gameId + " does not exist.");
+        }
+
+
+        public void AddUser(Game game, string userId, string username)
+        {
+            string filePath = getFilePath(game.GameId);
+            string[] lines = File.ReadAllLines(filePath);
+            string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
+            
+            lines[USER_INFO] += USER_SEPARATOR + userId + VALUE_SEPARATOR + username + VALUE_SEPARATOR + defaultVote;
+            save(filePath, lines);
+        }
+
+        public void UpdateTitle(Game game, string title)
+        {
+            if (title == null)
+                title = "";
+
+            string filePath = getFilePath(game.GameId);
+            string[] lines = File.ReadAllLines(filePath);
+
+            lines[DESCRIPTION] = title.Replace("\r\n", NEWLINE) + DESCRIPTION_SEPARATOR + game.Description;
+            save(filePath, lines);
+        }
+
+
+        public void Vote(Game game, string userId, string vote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Game GetGame(string gameId)
+        {
+            throw new NotImplementedException();
         }
     }
 
