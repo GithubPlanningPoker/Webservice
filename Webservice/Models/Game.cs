@@ -73,6 +73,8 @@ namespace Webservice.Models
 
             public void Add(User user)
             {
+                if (users.Contains(user))
+                    throw new ArgumentException("User " + user.Name + " already exists", "user");
                 users.Add(user);
             }
 
