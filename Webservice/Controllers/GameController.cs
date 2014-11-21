@@ -231,19 +231,13 @@ namespace Webservice.Controllers
         [HttpDelete]
         public HttpResponseMessage kickUser(string gameId, string username, [FromBody]UserIdDTO value)
         {
-            string userId = value.userId;
-            Game g;
-            try
+            
+            return executeGameOperation(gameId, g =>
             {
-                g = Database.GetGame(gameId);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, e.Message);
-            }
-
-            Database.KickUser(g, username, userId);
-            return new HttpResponseMessage(HttpStatusCode.OK);
+                
+                Database.KickUser(g, username, value.userId);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            });
         }
 
         /// <summary>
