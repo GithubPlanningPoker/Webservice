@@ -7,11 +7,9 @@ namespace Webservice.Response
 {
     public class GetUsersResponse
     {
+        public bool allVoted { get; set; }
         public List<GetUserResponse> users { get; set; }
 
-        public GetUsersResponse()
-        {
-            users = new List<GetUserResponse>();
-        }
+        public GetUsersResponse() { }
     }
 }

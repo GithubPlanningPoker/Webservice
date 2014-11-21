@@ -184,10 +184,10 @@ namespace Webservice.Controllers
             {
                 if (!g.Users.hasEveryoneVoted())
                     return Request.CreateResponse(HttpStatusCode.OK,
-                        new GetUsersResponse() { users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = null }).ToList() });
+                        new GetUsersResponse() { allVoted = false, users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = null }).ToList() });
                 else
                     return Request.CreateResponse(HttpStatusCode.OK,
-                        new GetUsersResponse() { users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote }).ToList() });
+                        new GetUsersResponse() { allVoted = true, users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote }).ToList() });
             });
 
         }
