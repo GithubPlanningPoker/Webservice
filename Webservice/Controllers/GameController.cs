@@ -92,6 +92,7 @@ namespace Webservice.Controllers
 
             return executeGameOperation(gameId, g =>
             {
+
                 Database.AddUser(g, userId, username);
                 return Request.CreateResponse(HttpStatusCode.Created,
                     new UserPostResponse() { userId = userId });
@@ -203,7 +204,17 @@ namespace Webservice.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, e.Message);
             }
 
-            return gameOperation(game);
+            HttpResponseMessage response;
+            try
+            {
+                response = gameOperation(game);
+            }
+            catch (Exception e)
+            {
+                response = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+
+            return response;
         }
 
 
