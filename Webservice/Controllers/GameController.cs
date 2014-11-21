@@ -192,6 +192,21 @@ namespace Webservice.Controllers
 
         }
 
+        [Route("{gameId}/user/{username}")]
+        [HttpGet]
+        [ResponseType(typeof(GetUserResponse))]
+        public HttpResponseMessage getUser(string gameId, string username, [FromBody]UserIdDTO value)
+        {
+            string userId = value != null ? value.userId : null;
+            return executeGameOperation(gameId, g =>
+            {
+                Models.User user = g.Users[username];
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new GetUserResponse() { username = user.Name, voted = user.Voted,
+                        vote = g.Users.hasEveryoneVoted() || (userId != null && user.UserId == userId) ? user.Vote : null });
+            });
+        }
+
         private HttpResponseMessage executeGameOperation(string gameId, Func<Game, HttpResponseMessage> gameOperation)
         {
             Game game;
