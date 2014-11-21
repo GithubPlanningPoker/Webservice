@@ -8,28 +8,28 @@ namespace Webservice.Models
 {
     public interface DatabaseConnectionInterface
     {
-        void CreateGame(string gameId, string hostId, string username);
+        void CreateGame(string gameId, string userId, string username);
 
-        void AddUser(string gameId, string userId, string username);
+        void AddUser(Game game, string userId, string username);
 
-        void UpdateTitle(string gameId, string title);
+        void UpdateTitle(Game game, string title);
 
-        void UpdateDescription(string gameId, string description);
+        void UpdateDescription(Game game, string description);
 
-        string GetTitle(string gameId);
+        void Vote(Game game, string userId, string vote);
 
-        string GetDescription(string gameId);
+        void ClearVotes(Game game, string userId);
 
-        void Vote(string gameId, string userId, string vote, string username);
-
-        void ClearVotes(string gameId, string userId);
-
-        void KickUser(string gameId, string username, string userId);
-
-        IEnumerable<User> GetUsers(string gameId);
+        void KickUser(Game game, string username, string userId);
 
         bool GameExists(string gameId);
 
-        string GetHost(string gameId);
+        /// <summary>
+        /// Gets the game with the specified gameId
+        /// </summary>
+        /// <param name="gameId">The game identifier.</param>
+        /// <returns>The Game with the specified gameId</returns>
+        /// <exception cref="KeyNotFoundException">If game could not be found</exception>
+        Game GetGame(string gameId);
     }
 }

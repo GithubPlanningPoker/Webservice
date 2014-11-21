@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Webservice.Models
 {
-    public class User
+    public class User :IEquatable<User>
     {
         public User(string userId, string name, string vote = "", bool voted = false)
         {
@@ -45,6 +45,11 @@ namespace Webservice.Models
         {
             get { return voted; }
             set { voted = value; }
+        }
+
+        public bool Equals(User other)
+        {
+            return this.name.Equals(other.name);
         }
     }
 }

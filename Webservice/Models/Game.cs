@@ -58,9 +58,14 @@ namespace Webservice.Models
             throw new ArgumentException("This user: " + userId + " is not the host.");
         }
 
-        public class UserCollection
+        public class UserCollection : IEnumerable<User>
         {
             private List<User> users;
+
+            public User this[string username]
+            {
+                get { return users.First(x => x.Name == username); }
+            }
             public UserCollection()
             {
                 users = new List<User>();
@@ -68,6 +73,8 @@ namespace Webservice.Models
 
             public void Add(User user)
             {
+                if (users.Contains(user))
+                    throw new ArgumentException("User " + user.Name + " already exists", "user");
                 users.Add(user);
             }
 
@@ -138,6 +145,19 @@ namespace Webservice.Models
             public IEnumerator<User> GetEnumerator()
             {
                 return users.GetEnumerator();
+            }
+
+            public bool hasEveryoneVoted()
+            {
+                foreach (var user in users)
+                    if (user.Voted == false)
+                        return false;
+                return true;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
 

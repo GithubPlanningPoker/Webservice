@@ -68,21 +68,11 @@ namespace Webservice.Controllers
         [ResponseType(typeof(GetGameResponse))]
         public HttpResponseMessage getGame(string gameId)
         {
-            try
+            return executeGameOperation(gameId, g =>
             {
                 return Request.CreateResponse(HttpStatusCode.OK,
-                    new GetGameResponse() { username = Database.GetHost(gameId) });
-            }
-            catch (ArgumentException e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound,
-                    e.Message);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+                    new GetGameResponse() { username = g.Host.Name });
+            });
 
         }
 
@@ -99,17 +89,14 @@ namespace Webservice.Controllers
         {
             string username = value.username;
             string userId = getMD5(value.username);
-            try
+
+            return executeGameOperation(gameId, g =>
             {
-                Database.AddUser(gameId, userId, username);
+
+                Database.AddUser(g, userId, username);
                 return Request.CreateResponse(HttpStatusCode.Created,
                     new UserPostResponse() { userId = userId });
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+            });
         }
 
         /// <summary>
@@ -122,17 +109,12 @@ namespace Webservice.Controllers
         [ResponseType(typeof(GetTitleResponse))]
         public HttpResponseMessage getTitle(string gameId)
         {
-            try
+            return executeGameOperation(gameId, g =>
             {
-                string title = Database.GetTitle(gameId);
                 return Request.CreateResponse(HttpStatusCode.OK,
-                    new GetTitleResponse() { title = title });
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+                    new GetTitleResponse() { title = g.Title });
+            });
+
         }
 
         /// <summary>
@@ -145,17 +127,11 @@ namespace Webservice.Controllers
         [HttpPut]
         public HttpResponseMessage updateTitle(string gameId, [FromBody]TitleDTO value)
         {
-            string title = value.title;
-            try
-            {
-                Database.UpdateTitle(gameId, title);
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+            return executeGameOperation(gameId, g =>
+                {
+                    Database.UpdateTitle(g, value.title);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                });
         }
 
         /// <summary>
@@ -168,17 +144,12 @@ namespace Webservice.Controllers
         [ResponseType(typeof(GetDescriptionResponse))]
         public HttpResponseMessage getDescription(string gameId)
         {
-            try
+            return executeGameOperation(gameId, g =>
             {
-                string description = Database.GetDescription(gameId);
                 return Request.CreateResponse(HttpStatusCode.OK,
-                    new GetDescriptionResponse() { description = description });
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+                    new GetDescriptionResponse() { description = g.Description });
+            });
+
         }
 
         /// <summary>
@@ -191,17 +162,12 @@ namespace Webservice.Controllers
         [HttpPut]
         public HttpResponseMessage updateDescription(string gameId, [FromBody]DescriptionDTO value)
         {
-            string description = value.description;
-            try
+            return executeGameOperation(gameId, g =>
             {
-                Database.UpdateDescription(gameId, description);
+                Database.UpdateDescription(g, value.description);
                 return new HttpResponseMessage(HttpStatusCode.OK);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+            });
+
         }
 
         /// <summary>
@@ -214,30 +180,44 @@ namespace Webservice.Controllers
         [ResponseType(typeof(GetUsersResponse))]
         public HttpResponseMessage getUsers(string gameId)
         {
-            try
+            return executeGameOperation(gameId, g =>
             {
-                var users = Database.GetUsers(gameId).ToArray();
-                if (!hasEveryoneVoted(users))
+                if (!g.Users.hasEveryoneVoted())
                     return Request.CreateResponse(HttpStatusCode.OK,
-                        new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = null })) });
+                        new GetUsersResponse() { users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = null }).ToList() });
                 else
                     return Request.CreateResponse(HttpStatusCode.OK,
-                        new GetUsersResponse() { users = new List<GetUserResponse>(users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote })) });
+                        new GetUsersResponse() { users = g.Users.Select(x => new GetUserResponse() { username = x.Name, voted = x.Voted, vote = x.Vote }).ToList() });
+            });
+
+        }
+
+        private HttpResponseMessage executeGameOperation(string gameId, Func<Game, HttpResponseMessage> gameOperation)
+        {
+            Game game;
+            try
+            {
+                game = Database.GetGame(gameId);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, e.Message);
+            }
+
+            HttpResponseMessage response;
+            try
+            {
+                response = gameOperation(game);
             }
             catch (Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
+                response = Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
             }
+
+            return response;
         }
 
-        private static bool hasEveryoneVoted(IEnumerable<User> users)
-        {
-            foreach (var user in users)
-                if (user.Voted == false)
-                    return false;
-            return true;
-        }
+
 
         /// <summary>
         /// Kicks a user from the game.
@@ -252,16 +232,18 @@ namespace Webservice.Controllers
         public HttpResponseMessage kickUser(string gameId, string username, [FromBody]UserIdDTO value)
         {
             string userId = value.userId;
+            Game g;
             try
             {
-                Database.KickUser(gameId, username, userId);
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                g = Database.GetGame(gameId);
             }
-            catch (Exception e)
+            catch (KeyNotFoundException e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, e.Message);
             }
+
+            Database.KickUser(g, username, userId);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -275,16 +257,24 @@ namespace Webservice.Controllers
         public HttpResponseMessage clearVotes(string gameId, [FromBody]UserIdDTO value)
         {
             string userId = value.userId;
+            Game g;
+
             try
             {
-                Database.ClearVotes(gameId, userId);
+                g = Database.GetGame(gameId);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, e.Message);
+            }
+
+            if (g.IsHost(userId))
+            {
+                Database.ClearVotes(g, userId);
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+            else return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Only host can clear votes");
+
         }
 
         /// <summary>
@@ -300,21 +290,22 @@ namespace Webservice.Controllers
         {
             string vote = value.vote;
             string userId = value.userId;
-            try
+
+
+            return executeGameOperation(gameId, g =>
             {
-                Database.Vote(gameId, userId, vote, username);
-                return new HttpResponseMessage(HttpStatusCode.OK);
-            }
-            catch (InvalidOperationException e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Conflict,
-                    e.Message);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError,
-                    e.Message);
-            }
+                if (g.Users.Contains(userId))
+                {
+                    if (g.Users[username].Voted == true)
+                        return Request.CreateErrorResponse(HttpStatusCode.Conflict, "user already voted");
+                    else
+                    {
+                        Database.Vote(g, userId, vote);
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                }
+                else return Request.CreateErrorResponse(HttpStatusCode.NotFound, "user not found");
+            });
         }
 
         private String getMD5(String input)
