@@ -212,7 +212,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52450</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52450/</IISUrl>
+          <IISUrl>http://localhost:52450/api</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
