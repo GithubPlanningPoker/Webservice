@@ -20,7 +20,7 @@ namespace Webservice.Models
 
         void ClearVotes(Game game, string userId);
 
-        void KickUser(Game game, string username, string userId);
+        void KickUser(Game game, string username);
 
         bool GameExists(string gameId);
 

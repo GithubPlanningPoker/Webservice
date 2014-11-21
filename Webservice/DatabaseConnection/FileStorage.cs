@@ -86,13 +86,13 @@ namespace Webservice.Models
             save(filePath, lines);
         }
 
-        public void KickUser(Game game, string username, string userId)
+        public void KickUser(Game game, string username)
         {
             string filePath = getFilePath(game.GameId);
             string[] lines = File.ReadAllLines(filePath);
 
             string[] users = lines[USER_INFO].Split(USER_SEPARATOR);
-            isHost(users, userId);
+
             for (int i = 0; i < users.Length; i++)
             {
                 if (users[i].Split(VALUE_SEPARATOR)[1] == username)

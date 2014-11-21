@@ -231,12 +231,28 @@ namespace Webservice.Controllers
         [HttpDelete]
         public HttpResponseMessage kickUser(string gameId, string username, [FromBody]UserIdDTO value)
         {
-            
+
             return executeGameOperation(gameId, g =>
             {
-                
-                Database.KickUser(g, username, value.userId);
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                if (g.Users[username].Name == username && value.userId == g.Host.UserId)
+                {
+                    var l = g.Users.ToArray();
+                    foreach (var u in l)
+                    {
+                        Database.KickUser(g, u.Name);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+
+
+                if (value.userId == g.Host.UserId || value.userId == g.Users[username].UserId)
+                {
+                    Database.KickUser(g, username);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                else return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Only host or " + username + " can kick this user");
+
+
             });
         }
 
