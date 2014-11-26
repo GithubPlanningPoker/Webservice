@@ -41,7 +41,7 @@ namespace Webservice.Models
             game.Users.ClearVotes();
         }
 
-        public void KickUser(Game game, string username, string userId)
+        public void KickUser(Game game, string username)
         {
             game.Users.Kick(username);
         }

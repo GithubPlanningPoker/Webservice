@@ -98,7 +98,7 @@ namespace Webservice.Models
                         return;
                     }
 
-                throw new ArgumentException("The user: " + username + " does not exisst.");
+                throw new ArgumentException("The user: " + username + " does not exist.");
             }
 
             public User GetUser(string userId)
