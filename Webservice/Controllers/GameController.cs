@@ -249,20 +249,29 @@ namespace Webservice.Controllers
 
             return executeGameOperation(gameId, g =>
             {
-                if (g.Users[username].Name == username && value.userId == g.Host.UserId)
+
+                if (value.userId == g.Host.UserId) //request sent by host
+                {
+                    if (username == g.Users[username].Name) // kick other user
+                    {
+                        Database.KickUser(g, username);
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    else if (username == g.Host.Name) // kick host - room is no longer valid
+                    {
+                        var l = g.Users.ToArray();
+                        foreach (var u in l)
+                        {
+                            Database.KickUser(g, u.Name);
+                        }
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    else return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+                else if (value.userId == g.Users[username].UserId) // request sent by non-host, kick user only if request sent by the user himself
                 {
                     Database.KickUser(g, username);
-                    return new HttpResponseMessage(HttpStatusCode.OK);
-                }
 
-
-                if (value.userId == g.Host.UserId || value.userId == g.Users[username].UserId)
-                {
-                    var l = g.Users.ToArray();
-                    foreach (var u in l)
-                    {
-                        Database.KickUser(g, u.Name);
-                    }
                     return new HttpResponseMessage(HttpStatusCode.OK);
                 }
                 else return Request.CreateErrorResponse(HttpStatusCode.Conflict, "Only host or " + username + " can kick this user");
