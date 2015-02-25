@@ -252,7 +252,7 @@ namespace Webservice.Controllers
 
                 if (value.userId == g.Host.UserId) //request sent by host
                 {
-                    if (username == g.Users[username].Name) // kick other user
+                    if (username == g.Users[username].Name && username != g.Host.Name) // kick other user
                     {
                         Database.KickUser(g, username);
                         return new HttpResponseMessage(HttpStatusCode.OK);
