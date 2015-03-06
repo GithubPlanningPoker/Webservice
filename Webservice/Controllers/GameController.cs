@@ -88,7 +88,7 @@ namespace Webservice.Controllers
         public dynamic joinGame(string gameId, [FromBody]UsernameDTO value)
         {
             string username = value.username;
-            string userId = getMD5(value.username);
+            string userId = getMD5(value.username+ DateTime.Now.Ticks.ToString());
 
             return executeGameOperation(gameId, g =>
             {
