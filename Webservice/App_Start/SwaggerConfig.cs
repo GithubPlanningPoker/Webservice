@@ -32,7 +32,7 @@ namespace Webservice
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "Webservice");
+                        c.SingleApiVersion("v1", "GHPP Web Service");
 
                         // If your API has multiple versions, use "MultipleApiVersions" instead of "SingleApiVersion".
                         // In this case, you must provide a lambda that tells Swashbuckle which actions should be
@@ -152,8 +152,9 @@ namespace Webservice
                         // Xml comments (http://msdn.microsoft.com/en-us/library/b2s063f7(v=vs.110).aspx), you can incorporate
                         // those comments into the generated docs and UI. You can enable this by providing the path to one or
                         // more Xml comment files.
-                        //
-                        //c.IncludeXmlComments(GetXmlCommentsPath());
+                        //protected static string GetXmlCommentsPath()
+                        c.IncludeXmlComments(System.String.Format(@"{0}\App_Data\XmlDocument.xml",
+                          System.AppDomain.CurrentDomain.BaseDirectory));
 
                         // In contrast to WebApi, Swagger 2.0 does not include the query string component when mapping a URL
                         // to an action. As a result, Swashbuckle will raise an exception if it encounters multiple actions
