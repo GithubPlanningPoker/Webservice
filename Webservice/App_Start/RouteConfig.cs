@@ -12,12 +12,6 @@ namespace Webservice
         public static void RegisterRoutes(RouteCollection routes)
         {
             AreaRegistration.RegisterAllAreas();
-
-            routes.MapRoute(
-                name: "HelpPage",
-                url: "Help",
-                defaults: new { controller = "Help", action = "Index" }
-            );
         }
     }
 }
